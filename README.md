@@ -2,7 +2,7 @@
 An R package for creating mirrored Manhattan plots
 
 ## Overview
-hudson is an R package for creating mirrored Manhattan plots with a shared x-axis, similar to Figure 4 from Verma et al. shown [here](https://www.cell.com/ajhg/fulltext/S0002-9297(18)30062-4). The package includes functions for genome-wide, phenome-wide, and environment-wide association analyses (GWAS, PheWAS, EWAS, respectively), though they may adaptable for other types of data. You can simply specify a dataset for the top and bottom tracks to generate a basic plot, or provide meta information to annotate a more complex plot.
+hudson is an R package for creating mirrored Manhattan plots with a shared x-axis, similar to Figure 4 from Verma et al. shown [here](https://www.cell.com/ajhg/fulltext/S0002-9297(18)30062-4). The package includes functions to visualize genome-wide, phenome-wide, and environment-wide association analysis (GWAS, PheWAS, EWAS, respectively) results, though they may adaptable for other types of data such as Beta, SNP intensity value, or even other types of analyses. You can simply specify a dataset for the top and bottom tracks to generate a basic plot, or provide meta information to annotate a more complex plot.
 
 ## Installation
 As of now, there is only a development version of the package which can be installed using devtools.
@@ -56,11 +56,18 @@ gmirror(top=t, bottom=b, line=0.0001, annotate_p=0.0001, chrcolor1="#3FA7D6", ch
 
 ```
 library(hudson)
-#Generate some data
+#Add some phenotype information
+t$PHE <- rep(paste("Pheno", seq(1:5), sep="") , length.out=5000, each=1)
+b$PHE <- rep(paste("Pheno", seq(1:5), sep="") , length.out=5000, each=1)
+t <- t[, c(6,1:5)]
+b <- b[, c(6,1:5)]
 
+#Create a plot with highlight and annotation by p-value threshold
+phemirror(top=t, bottom=b, highlight_p = 0.0001, highlighter="green", annotate_p=0.0001)
 ```
 
 ### Create a mirrored Manhattan plot using EWAS data
 ```
 library(hudson)
+
 ```
