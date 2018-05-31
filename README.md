@@ -109,5 +109,5 @@ emirror(top=t, bottom=b, highlight_var = c("Var1266", "Var3682"), color1="#58729
 
 ![Imgur](https://i.imgur.com/NUkQ9jb.png)
 
-Note that although you can rotate the axis labels by changing the ```rotatelabel```` and ```labelangle``` parameters, you'll probaby want to keep your "Group" names pretty short if some of your categories don't have a lot of variables in them.
+Note that although you can rotate the axis labels by changing the ```rotatelabel``` and ```labelangle``` parameters, you'll probaby want to keep your "Group" names pretty short if some of your categories don't have a lot of variables in them.
 
