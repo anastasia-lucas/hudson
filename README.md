@@ -76,5 +76,38 @@ phemirror(top=t, bottom=b, highlight_p = 0.0001, highlighter="green", annotate_p
 ### Create a mirrored Manhattan plot using EWAS data
 ```
 library(hudson)
+#Generate some data
+t <- data.frame(Variable=paste("Var", seq(1:5000), sep=""), 
+                pvalue=runif(n=5000), 
+                Group=rep(paste("G", seq(1:6), sep=""), length.out=5000, each=1),
+                Shape=rep(paste("S", seq(1:5), sep="") , length.out=5000, each=1))
+b <- data.frame(Variable=paste("Var", seq(1:5000), sep=""),
+                pvalue=runif(n=5000), 
+                Group=rep(paste("G", seq(1:6), sep=""), length.out=5000, each=1),
+                Shape=rep(paste("S", seq(1:5), sep="") , length.out=5000, each=1))
+head(t)
+  Variable    pvalue Group Shape
+1     Var1 0.1430880    G1    S1
+2     Var2 0.6055253    G2    S2
+3     Var3 0.8830645    G3    S3
+4     Var4 0.1560467    G4    S4
+5     Var5 0.7784929    G5    S5
+6     Var6 0.9709326    G6    S1
+head(b)
+  Variable    pvalue Group Shape
+1     Var1 0.5381795    G1    S1
+2     Var2 0.9858681    G2    S2
+3     Var3 0.7146113    G3    S3
+4     Var4 0.3732309    G4    S4
+5     Var5 0.3375573    G5    S5
+6     Var6 0.4545325    G6    S1
+
+#Generate a plot and highlight by variable name
+emirror(top=t, bottom=b, highlight_var = c("Var1266", "Var3682"), color1="#587291", color2="#2F97C1")
 
 ```
+
+![Imgur](https://i.imgur.com/NUkQ9jb.png)
+
+Note that although you can rotate the axis labels by changing the ```rotatelabel```` and ```labelangle``` parameters, you'll probaby want to keep your "Group" names pretty short if some of your categories don't have a lot of variables in them.
+
