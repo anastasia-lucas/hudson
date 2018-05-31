@@ -65,7 +65,7 @@ emirror <- function(top, bottom,  line, log10=TRUE, yaxis, opacity=1, toptitle=N
     yaxislab <- yaxis
     if(!missing(line)) {redline <- line}
   }
-  yaxismax <- max(d_order$pval[which(d_order$pval< Inf)])
+  yaxismax <- max(d$pval[which(d$pval< Inf)])
 
   #Save to merge later
   d$rowid <- seq.int(nrow(d))
@@ -131,11 +131,11 @@ emirror <- function(top, bottom,  line, log10=TRUE, yaxis, opacity=1, toptitle=N
         getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
         #Top Colors
         ngroupcolors <- nlevels(factor(d$Color[d$Location=="Top"]))
-        topcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+        topcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
         names(topcols) <-c(levels(factor(lims$Color)), levels(factor(d$Color[d$Location=="Top"])), "shade_ffffff", "shade_ebebeb")
         #Bottom Colors
         ngroupcolors <- nlevels(factor(d$Color[d$Location=="Bottom"]))
-        bottomcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+        bottomcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
         names(bottomcols) <-c(levels(factor(lims$Color)), levels(factor(d$Color[d$Location=="Bottom"])), "shade_ffffff", "shade_ebebeb")
 
       }
@@ -208,13 +208,13 @@ emirror <- function(top, bottom,  line, log10=TRUE, yaxis, opacity=1, toptitle=N
   }
   #Highlight if given
   if(!missing(highlight_var)){
-    if("Shape" %in% names(topn)){
+    if("Shape" %in% topn){
       p1 <- p1 + geom_point(data=d_order[d_order$Variable %in% highlight_var & d_order$Location=="Top", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
       p1 <- p1 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
       p1 <- p1 + geom_point(data=d_order[d_order$Variable %in% highlight_var & d_order$Location=="Top", ], aes(x=pos_index, y=pval), colour=highlighter)
     }
-    if("Shape" %in% names(bottomn)){
+    if("Shape" %in% bottomn){
       p2 <- p2 + geom_point(data=d_order[d_order$Variable %in% highlight_var & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
       p2 <- p2 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
@@ -222,13 +222,13 @@ emirror <- function(top, bottom,  line, log10=TRUE, yaxis, opacity=1, toptitle=N
     }
   }
   if(!missing(highlight_p)){
-    if("Shape" %in% names(topn)){
+    if("Shape" %in% topn){
       p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Top", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
       p1 <- p1 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
       p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Top", ], aes(x=pos_index, y=pval), colour=highlighter)
     }
-    if("Shape" %in% names(bottomn)){
+    if("Shape" %in% bottomn){
       p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
       p2 <- p2 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
