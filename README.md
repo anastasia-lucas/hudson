@@ -7,7 +7,7 @@ hudson is an R package for creating mirrored Manhattan plots with a shared x-axi
 ## Installation
 As of now, there is only a development version of the package which can be installed using devtools.
 
-```devtoolls::install_github('anastasia-lucas/hudson')```
+```devtools::install_github('anastasia-lucas/hudson')```
 
 ## Usage
 
