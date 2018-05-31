@@ -71,6 +71,7 @@ b <- b[, c(6,1:5)]
 #Create a plot with highlight and annotation by p-value threshold
 phemirror(top=t, bottom=b, highlight_p = 0.0001, highlighter="green", annotate_p=0.0001)
 ```
+![Imgur](https://i.imgur.com/XM9sJ4z.jpg)
 
 ### Create a mirrored Manhattan plot using EWAS data
 ```
