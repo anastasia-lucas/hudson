@@ -9,6 +9,8 @@ As of now, there is only a development version of the package which can be insta
 
 ```devtools::install_github('anastasia-lucas/hudson')```
 
+This package uses ggplot2, gridExtra, and RColorBrewer. ggrepel is suggested for improved text annotation, but not required.
+
 ## Usage
 
 ### Create a mirrored Manhattan plot using GWAS data
