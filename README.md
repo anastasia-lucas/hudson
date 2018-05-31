@@ -43,6 +43,8 @@ head(b)
 #Create a basic plot
 gmirror(top=t, bottom=b)
 
+![Imgur](https://i.imgur.com/5wYjMzJ.png)
+
 #Add meta information and text annotations
 #Add shape information to our datasets
 t$Shape <- rep(paste("S", seq(1:3), sep="") , length.out=5000, each=1)
