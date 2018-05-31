@@ -56,6 +56,7 @@ b$Shape <- rep(paste("S", seq(1:3), sep="") , length.out=5000, each=1)
 #Create more informative plot
 gmirror(top=t, bottom=b, line=0.0001, annotate_p=0.0001, chrcolor1="#3FA7D6", chrcolor2="#FAC05E", toptitle="Top Plot", bottomtitle="Bottom Plot")
 ```
+![Imgur](https://i.imgur.com/1yrlwsk.png)
 
 ### Create a mirrored Manhattan plot using PheWAS data
 
