@@ -32,8 +32,9 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
     require("ggplot2", quietly = TRUE)
+    require("gridExtra", quietly = TRUE)
   }
-  
+
   #Sort data
   topn <- names(top)
   bottomn <- names(bottom)
@@ -54,7 +55,7 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
   d_order <- d[order(d$CHR, d$POS), ]
   d_order$pos_index <- seq.int(nrow(d_order))
   d_order_sub <- d_order[, c("SNP", "CHR", "POS", "pvalue", "pos_index")]
-  
+
   #Set up dataframe with color and position info
   maxRows <- by(d_order_sub, d_order_sub$CHR, function(x) x[which.max(x$pos_index),])
   minRows <- by(d_order_sub, d_order_sub$CHR, function(x) x[which.min(x$pos_index),])
@@ -65,7 +66,7 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
   lims$av <- (lims$posmin + lims$posmax)/2
   lims <- lims[order(lims$Color),]
   lims$shademap <- rep(c("shade_ffffff", "shade_ebebeb"), each=1)
-  
+
   #Set up colors
   nchrcolors <- nlevels(factor(lims$Color))
 
@@ -73,7 +74,7 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
   colnames(d_order)[2] <- "Color"
   newcols <-c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), "#FFFFFF", "#EBEBEB")
   names(newcols) <-c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
-  
+
   #Info for y-axis
   if(log10==TRUE){
     d_order$pval <- -log10(d_order$pvalue)
@@ -138,8 +139,8 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
   p1 <- p1 + ylab(yaxislab)
   #Add pvalue threshold line
   if(!missing(line)){p1 <- p1 + geom_hline(yintercept = redline, colour="red")}
-  
-  
+
+
   #BOTTOM PLOT
   p2 <- ggplot() + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = 0, ymax = Inf, fill=factor(shademap)), alpha = 0.5)
   #Add shape info if available
@@ -191,11 +192,11 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
   p2 <- p2 + ylab(yaxislab)
   #Add pvalue threshold line
   if(!missing(line)){p2 <- p2 + geom_hline(yintercept = redline, colour="red")}
-  
+
   #Format
-  p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax)) 
+  p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
   p2 <- p2+scale_y_reverse(limits=c(yaxismax,0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
-  
+
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=relhgts)

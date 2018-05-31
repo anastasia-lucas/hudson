@@ -36,7 +36,8 @@ emirror <- function(top, bottom,  line, log10=TRUE, yaxis, opacity=1, toptitle=N
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
-    require("ggplot2")
+    require("ggplot2", quietly = TRUE)
+    require("gridExtra", quietly = TRUE)
   }
 
   topn <- names(top)

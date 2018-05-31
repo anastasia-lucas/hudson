@@ -34,8 +34,9 @@ phemirror <- function(top, bottom, phegroup, line, log10=TRUE, yaxis, opacity=1,
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
     require("ggplot2", quietly = TRUE)
+    require("gridExtra", quietly = TRUE)
   }
-  
+
   #Sort data
   topn <- names(top)
   bottomn <- names(bottom)
@@ -57,7 +58,7 @@ phemirror <- function(top, bottom, phegroup, line, log10=TRUE, yaxis, opacity=1,
   d_order <- d_phe[order(d_phe$CHR, d_phe$POS), ]
   d_order$pos_index <- seq.int(nrow(d_order))
   d_order_sub <- d_order[, c("SNP", "CHR", "POS", "pvalue", "pos_index")]
-  
+
   #Set up dataframe with color and position info
   maxRows <- by(d_order_sub, d_order_sub$CHR, function(x) x[which.max(x$pos_index),])
   minRows <- by(d_order_sub, d_order_sub$CHR, function(x) x[which.min(x$pos_index),])
@@ -68,7 +69,7 @@ phemirror <- function(top, bottom, phegroup, line, log10=TRUE, yaxis, opacity=1,
   lims$av <- (lims$posmin + lims$posmax)/2
   lims <- lims[order(lims$Color),]
   lims$shademap <- rep(c("shade_ffffff", "shade_ebebeb"), each=1)
-  
+
   #Set up colors
   nchrcolors <- nlevels(factor(lims$Color))
   if(!missing(groupcolors)){
@@ -92,7 +93,7 @@ phemirror <- function(top, bottom, phegroup, line, log10=TRUE, yaxis, opacity=1,
     bottomcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
     names(bottomcols) <-c(levels(factor(lims$Color)), levels(factor(d_order$Color[d_order$Location=="Bottom"])), "shade_ffffff", "shade_ebebeb")
   }
-  
+
   #Info for y-axis
   if(log10==TRUE){
     d_order$pval <- -log10(d_order$pvalue)
@@ -104,7 +105,7 @@ phemirror <- function(top, bottom, phegroup, line, log10=TRUE, yaxis, opacity=1,
     if(!missing(line)) {redline <- line}
   }
   yaxismax <- max(d_order$pval[which(d_order$pval< Inf)])
-  
+
   #Start plotting
   #TOP PLOT
   p1 <- ggplot() + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = 0, ymax = Inf, fill=factor(shademap)), alpha = 0.5)
@@ -158,7 +159,7 @@ phemirror <- function(top, bottom, phegroup, line, log10=TRUE, yaxis, opacity=1,
   p1 <- p1 + ylab(yaxislab)
   #Add pvalue threshold line
   if(!missing(line)){p1 <- p1 + geom_hline(yintercept = redline, colour="red")}
-  
+
   #Start plotting
   #BOTTOM PLOT
   p2 <- ggplot() + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = 0, ymax = Inf, fill=factor(shademap)), alpha = 0.5)
@@ -212,11 +213,11 @@ phemirror <- function(top, bottom, phegroup, line, log10=TRUE, yaxis, opacity=1,
   p2 <- p2 + ylab(yaxislab)
   #Add pvalue threshold line
   if(!missing(line)){p2 <- p2 + geom_hline(yintercept = redline, colour="red")}
-  
+
   #Format
-  p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax)) 
+  p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
   p2 <- p2+scale_y_reverse(limits=c(yaxismax,0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
-  
+
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0)
