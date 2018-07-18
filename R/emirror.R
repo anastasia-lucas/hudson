@@ -24,7 +24,7 @@
 #' @param rotatelabel boolean, rotate axis labels?
 #' @param labelangle angle to rotate
 #' @param file file name of saved image
-#' @param relghts relative heights for the plots, useful if using long axis labels
+#' @param hgtratio height ratio of plots, equal to top plot proportion
 #' @param hgt height of plot in inches
 #' @param wi width of plot in inches
 #' @param res resolution of plot in pixels per inch
@@ -33,7 +33,7 @@
 #' @examples
 #' emirror(top, bottom, line, file="emirror", hgt=7, wi=12, res=300 )
 
-emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p, highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, file="emirror", relhgts=c(1/2, 1/2), hgt=7, wi=12, res=300){
+emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p, highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, file="emirror", hgtratio=0.5, hgt=7, wi=12, res=300){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -258,7 +258,7 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
 
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
-  p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=relhgts)
+  p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio, 1-hgtratio))
   ggsave(p, filename=paste(file, ".png", sep=""), dpi=res, units="in", height=hgt, width=wi)
   return(p)
 

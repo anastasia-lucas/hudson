@@ -7,8 +7,8 @@
 gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
   annotate_snp, annotate_p, toptitle = NULL, bottomtitle = NULL,
   highlight_snp, highlight_p, highlighter = "red", chrcolor1 = "#AAAAAA",
-  chrcolor2 = "#4D4D4D", file = "gmirror", hgt = 7, wi = 12,
-  res = 300)
+  chrcolor2 = "#4D4D4D", file = "gmirror", hgt = 7, hgtratio = 0.5,
+  wi = 12, res = 300)
 }
 \arguments{
 \item{top}{data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape}
@@ -46,6 +46,8 @@ gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 \item{file}{file name of saved image}
 
 \item{hgt}{height of plot in inches}
+
+\item{hgtratio}{height ratio of plots, equal to top plot proportion}
 
 \item{wi}{width of plot in inches}
 

@@ -21,6 +21,7 @@
 #' @param highlighter color to highlight
 #' @param file file name of saved image
 #' @param hgt height of plot in inches
+#' @param hgtratio height ratio of plots, equal to top plot proportion
 #' @param wi width of plot in inches
 #' @param res resolution of plot in pixels per inch
 #' @return png image
@@ -28,7 +29,7 @@
 #' @examples
 #' gmirror(top, bottom, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, file, hgt, wi, res)
 
-gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", file="gmirror", hgt=7, wi=12, res=300 ){
+gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -202,7 +203,7 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
 
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
-  p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=relhgts)
+  p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio,1-hgtratio))
   ggsave(p, filename=paste(file, ".png", sep=""), dpi=res, units="in", height=hgt, width=wi)
   return(p)
 }

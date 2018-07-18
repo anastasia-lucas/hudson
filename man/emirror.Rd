@@ -8,8 +8,7 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
   toptitle = NULL, bottomtitle = NULL, annotate_var, annotate_p,
   highlight_var, highlight_p, highlighter = "red", color1 = "#AAAAAA",
   color2 = "#4D4D4D", groupcolors, rotatelabels = FALSE, labelangle,
-  file = "emirror", relhgts = c(1/2, 1/2), hgt = 7, wi = 12,
-  res = 300)
+  file = "emirror", hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
 }
 \arguments{
 \item{top}{data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional}
@@ -50,6 +49,8 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{file}{file name of saved image}
 
+\item{hgtratio}{height ratio of plots, equal to top plot proportion}
+
 \item{hgt}{height of plot in inches}
 
 \item{wi}{width of plot in inches}
@@ -57,8 +58,6 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 \item{res}{resolution of plot in pixels per inch}
 
 \item{rotatelabel}{boolean, rotate axis labels?}
-
-\item{relghts}{relative heights for the plots, useful if using long axis labels}
 }
 \value{
 png image(s)
