@@ -6,7 +6,8 @@
 #' Suggested: RColorBrewer, ggrepel
 #' @param top data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional
 #' @param bottom data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional
-#' @param line optional pvalue threshold to draw red line at
+#' @param tline optional pvalue threshold to draw red line at in top plot
+#' @param bline optional pvalue threshold to draw red line at in bottom plot
 #' @param log10 plot -log10() of pvalue column, boolean
 #' @param yaxis label for y-axis, automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0 to 1, useful for dense plots
@@ -19,7 +20,7 @@
 #' @param highlight_var list of variables to highlight
 #' @param highlight_p pvalue threshold to highlight
 #' @param highlighter color to highlight
-#' @param groupcolors named list of colors for data in 'Color' column
+#' @param groupcolors named list of colors where names correspond to data in 'Color' column
 #' @param rotatelabel boolean, rotate axis labels?
 #' @param labelangle angle to rotate
 #' @param file file name of saved image
@@ -32,7 +33,7 @@
 #' @examples
 #' emirror(top, bottom, line, file="emirror", hgt=7, wi=12, res=300 )
 
-emirror <- function(top, bottom,  line, log10=TRUE, yaxis, opacity=1, toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p, highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, file="emirror", relhgts=c(1/2, 1/2), hgt=7, wi=12, res=300){
+emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p, highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, file="emirror", relhgts=c(1/2, 1/2), hgt=7, wi=12, res=300){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -59,11 +60,13 @@ emirror <- function(top, bottom,  line, log10=TRUE, yaxis, opacity=1, toptitle=N
   if(log10==TRUE){
     d$pval <- -log10(d$pvalue)
     yaxislab <- expression(paste("-log"[10], "(p-value)", sep=""))
-    if(!missing(line)) {redline <- -log10(line)}
+    if(!missing(tline)) {tredline <- -log10(tline)}
+    if(!missing(bline)) {bredline <- -log10(bline)}
   } else {
     d$pval <- d$pvalue
     yaxislab <- yaxis
-    if(!missing(line)) {redline <- line}
+    if(!missing(tline)) {tredline <- tline}
+    if(!missing(bline)) {bredline <- bline}
   }
   yaxismax <- max(d$pval[which(d$pval< Inf)])
 
@@ -241,9 +244,11 @@ emirror <- function(top, bottom,  line, log10=TRUE, yaxis, opacity=1, toptitle=N
   p2 <- p2 + ylab(yaxislab)
 
   #Add pvalue threshold line
-  if(!missing(line)){
-     p1 <- p1 + geom_hline(yintercept = redline, colour="red")
-     p2 <- p2 + geom_hline(yintercept = redline, colour="red")
+  if(!missing(tline)){
+     p1 <- p1 + geom_hline(yintercept = tredline, colour="red")
+  }
+  if(!missing(bline)){
+     p2 <- p2 + geom_hline(yintercept = bredline, colour="red")
   }
 
   #Format

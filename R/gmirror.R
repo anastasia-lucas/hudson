@@ -5,7 +5,8 @@
 #' Suggested: RColorBrewer, ggrepel
 #' @param top data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape
 #' @param bottom data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape
-#' @param line optional pvalue threshold to draw red line at
+#' @param tline optional pvalue threshold to draw red line at in top plot
+#' @param bline optional pvalue threshold to draw red line at in bottom plot
 #' @param log10 plot -log10() of pvalue column, boolean
 #' @param yaxis label for y-axis, automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0 to 1, useful for dense plots
@@ -25,9 +26,9 @@
 #' @return png image
 #' @export
 #' @examples
-#' gmirror(top, bottom, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, groupcolors, file, hgt, wi, res)
+#' gmirror(top, bottom, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, file, hgt, wi, res)
 
-gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, file="gmirror", hgt=7, wi=12, res=300 ){
+gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", file="gmirror", hgt=7, wi=12, res=300 ){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -79,11 +80,13 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
   if(log10==TRUE){
     d_order$pval <- -log10(d_order$pvalue)
     yaxislab <- expression(paste("-log"[10], "(p-value)", sep=""))
-    if(!missing(line)) {redline <- -log10(line)}
+    if(!missing(tline)) {tredline <- -log10(tline)}
+    if(!missing(bline)) {bredline <- -log10(bline)}
   } else {
     d_order$pval <- d_order$pvalue
     yaxislab <- yaxis
-    if(!missing(line)) {redline <- line}
+    if(!missing(tline)) {tredline <- tline}
+    if(!missing(bline)) {bredline <- bline}
   }
   yaxismax <- max(d_order$pval[which(d_order$pval< Inf)])
 
@@ -138,7 +141,7 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
   #Add title and y axis title
   p1 <- p1 + ylab(yaxislab)
   #Add pvalue threshold line
-  if(!missing(line)){p1 <- p1 + geom_hline(yintercept = redline, colour="red")}
+  if(!missing(tline)){p1 <- p1 + geom_hline(yintercept = tredline, colour="red")}
 
 
   #BOTTOM PLOT
@@ -191,7 +194,7 @@ gmirror <- function(top, bottom, line, log10=TRUE, yaxis, opacity=1, annotate_sn
   #Add title and y axis title
   p2 <- p2 + ylab(yaxislab)
   #Add pvalue threshold line
-  if(!missing(line)){p2 <- p2 + geom_hline(yintercept = redline, colour="red")}
+  if(!missing(bline)){p2 <- p2 + geom_hline(yintercept = bredline, colour="red")}
 
   #Format
   p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))

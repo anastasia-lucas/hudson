@@ -4,18 +4,20 @@
 \alias{gmirror}
 \title{gmirror}
 \usage{
-gmirror(top, bottom, line, log10 = TRUE, yaxis, opacity = 1, annotate_snp,
-  annotate_p, toptitle = NULL, bottomtitle = NULL, highlight_snp,
-  highlight_p, highlighter = "red", chrcolor1 = "#AAAAAA",
-  chrcolor2 = "#4D4D4D", groupcolors, file = "gmirror", hgt = 7,
-  wi = 12, res = 300)
+gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
+  annotate_snp, annotate_p, toptitle = NULL, bottomtitle = NULL,
+  highlight_snp, highlight_p, highlighter = "red", chrcolor1 = "#AAAAAA",
+  chrcolor2 = "#4D4D4D", file = "gmirror", hgt = 7, wi = 12,
+  res = 300)
 }
 \arguments{
 \item{top}{data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape}
 
 \item{bottom}{data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape}
 
-\item{line}{optional pvalue threshold to draw red line at}
+\item{tline}{optional pvalue threshold to draw red line at in top plot}
+
+\item{bline}{optional pvalue threshold to draw red line at in bottom plot}
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 
@@ -58,5 +60,5 @@ Dependencies: ggplot2, gridExtra
 Suggested: RColorBrewer, ggrepel
 }
 \examples{
-gmirror(top, bottom, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, groupcolors, file, hgt, wi, res)
+gmirror(top, bottom, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, file, hgt, wi, res)
 }

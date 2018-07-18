@@ -4,11 +4,11 @@
 \alias{phemirror}
 \title{phemirror}
 \usage{
-phemirror(top, bottom, phegroup, line, log10 = TRUE, yaxis, opacity = 1,
-  annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter = "red",
-  toptitle = NULL, bottomtitle = NULL, chrcolor1 = "#AAAAAA",
-  chrcolor2 = "#4D4D4D", groupcolors, file = "phemirror", hgt = 7,
-  wi = 12, res = 300)
+phemirror(top, bottom, phegroup, tline, bline, log10 = TRUE, yaxis,
+  opacity = 1, annotate_snp, annotate_p, highlight_snp, highlight_p,
+  highlighter = "red", toptitle = NULL, bottomtitle = NULL,
+  chrcolor1 = "#AAAAAA", chrcolor2 = "#4D4D4D", groupcolors,
+  file = "phemirror", hgt = 7, wi = 12, res = 300)
 }
 \arguments{
 \item{top}{data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
@@ -17,7 +17,9 @@ phemirror(top, bottom, phegroup, line, log10 = TRUE, yaxis, opacity = 1,
 
 \item{phegroup}{optional grouping file for phenotypes, must contain PHE and Group columns}
 
-\item{line}{optional pvalue threshold to draw red line at}
+\item{tline}{optional pvalue threshold to draw red line at in top plot}
+
+\item{bline}{optional pvalue threshold to draw red line at in bottom plot}
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 
@@ -43,7 +45,7 @@ phemirror(top, bottom, phegroup, line, log10 = TRUE, yaxis, opacity = 1,
 
 \item{chrcolor2}{second alternating color for chromosome}
 
-\item{groupcolors}{named list of colors for data in 'PHE' or 'Group' column}
+\item{groupcolors}{named list of colors where names correspond to data in 'PHE' or 'Group' column}
 
 \item{file}{file name of saved image}
 

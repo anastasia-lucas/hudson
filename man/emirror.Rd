@@ -4,7 +4,7 @@
 \alias{emirror}
 \title{emirror}
 \usage{
-emirror(top, bottom, line, log10 = TRUE, yaxis, opacity = 1,
+emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
   toptitle = NULL, bottomtitle = NULL, annotate_var, annotate_p,
   highlight_var, highlight_p, highlighter = "red", color1 = "#AAAAAA",
   color2 = "#4D4D4D", groupcolors, rotatelabels = FALSE, labelangle,
@@ -16,7 +16,9 @@ emirror(top, bottom, line, log10 = TRUE, yaxis, opacity = 1,
 
 \item{bottom}{data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional}
 
-\item{line}{optional pvalue threshold to draw red line at}
+\item{tline}{optional pvalue threshold to draw red line at in top plot}
+
+\item{bline}{optional pvalue threshold to draw red line at in bottom plot}
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 
@@ -42,7 +44,7 @@ emirror(top, bottom, line, log10 = TRUE, yaxis, opacity = 1,
 
 \item{color2}{second alternating color}
 
-\item{groupcolors}{named list of colors for data in 'Color' column}
+\item{groupcolors}{named list of colors where names correspond to data in 'Color' column}
 
 \item{labelangle}{angle to rotate}
 
