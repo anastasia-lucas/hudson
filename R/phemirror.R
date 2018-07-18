@@ -23,6 +23,7 @@
 #' @param groupcolors named list of colors where names correspond to data in 'PHE' or 'Group' column
 #' @param file file name of saved image
 #' @param hgt height of plot in inches
+#' @param hgtratio height ratio of plots, equal to top plot proportion
 #' @param wi width of plot in inches
 #' @param res resolution of plot in pixels per inch
 #' @return png image
@@ -30,7 +31,7 @@
 #' @examples
 #' phemirror(top. bottom, phegroup, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, groupcolors, file, hgt, wi, res)
 
-phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, file="phemirror", hgt=7, wi=12, res=300 ){
+phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, file="phemirror", hgtratio=0.5, hgt=7, wi=12, res=300 ){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -223,7 +224,7 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
 
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
-  p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0)
+  p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio, 1-hgtratio))
   ggsave(p, filename=paste(file, ".png", sep=""), dpi=res, units="in", height=hgt, width=wi)
 
   return(p)
