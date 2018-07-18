@@ -2,12 +2,14 @@
 An R package for creating mirrored Manhattan plots
 
 ## Overview
-hudson is an R package for creating mirrored Manhattan plots with a shared x-axis, similar to Figure 4 from Verma et al. shown [here](https://www.cell.com/ajhg/fulltext/S0002-9297(18)30062-4). The package includes functions to visualize genome-wide, phenome-wide, and environment-wide association analysis (GWAS, PheWAS, EWAS, respectively) results, though they may adaptable for other types of data such as Beta, SNP intensity value, or even other types of analyses. You can simply specify a dataset for the top and bottom tracks to generate a basic plot, or provide meta information to annotate a more complex plot.
+hudson is an R package for creating mirrored Manhattan plots with a shared x-axis, similar to Figure 4 from Verma et al. shown [here](https://www.cell.com/ajhg/fulltext/S0002-9297(18)30062-4) for position by position comparison of results. The package includes functions to visualize data from genome-wide, phenome-wide, and environment-wide association analyses (GWAS, PheWAS, EWAS, respectively) directly, though they may adaptable for other types of data such as beta or SNP intensity value, or other types of analyses. You can simply specify a dataset for the top and bottom tracks to generate a basic plot, or provide meta information to annotate a more complex plot.
 
 ## Installation
 As of now, there is only a development version of the package which can be installed using devtools.
 
 ```devtools::install_github('anastasia-lucas/hudson')```
+
+This package uses ggplot2, gridExtra, and RColorBrewer. ggrepel is suggested for improved text annotation, but not required.
 
 ## Usage
 
