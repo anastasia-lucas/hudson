@@ -187,6 +187,7 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     p1 <- p1 + scale_colour_manual(name = "Color", values = topcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = topcols, guides(alpha=FALSE))
     p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = bottomcols, guides(alpha=FALSE))
   }
+  
   #Highlight if given
   if(!missing(highlight_var)){
     if("Shape" %in% topn){
@@ -216,6 +217,14 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
       p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval), colour=highlighter)
     }
   }
+  #Add pvalue threshold line
+  if(!missing(tline)){
+    p1 <- p1 + geom_hline(yintercept = tredline, colour="red")
+  }
+  if(!missing(bline)){
+    p2 <- p2 + geom_hline(yintercept = bredline, colour="red")
+  }
+  #Annotate
   if(!missing(annotate_p)){
     if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
       print("Consider installing 'ggrepel' for improved text annotation")
@@ -241,14 +250,6 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
   #Add title and y axis title
   p1 <- p1 + ylab(yaxislab)
   p2 <- p2 + ylab(yaxislab)
-
-  #Add pvalue threshold line
-  if(!missing(tline)){
-     p1 <- p1 + geom_hline(yintercept = tredline, colour="red")
-  }
-  if(!missing(bline)){
-     p2 <- p2 + geom_hline(yintercept = bredline, colour="red")
-  }
 
   #Format
   p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
