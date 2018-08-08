@@ -173,24 +173,6 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
   } else {
     p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=factor(Color)), alpha=opacity)
   }
-  if(!missing(annotate_p)){
-    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
-      print("Consider installing 'ggrepel' for improved text annotation")
-      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
-    } else {
-      require("ggrepel", quietly = TRUE)
-      p2 <- p2 + geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
-    }
-  }
-  if(!missing(annotate_snp)){
-    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE){
-      print("Consider installing 'ggrepel' for improved text annotation")
-      p2 <- p2 + geom_text(data=d_order[d_order$SNP %in% annotate_snp & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
-    } else {
-      require("ggrepel", quietly = TRUE)
-      p2 <- p2 + geom_text_repel(data=d_order[d_order$SNP %in% annotate_snp & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
-    }
-  }
   p2 <- p2 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
   p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = 0, fill=as.factor(Color)), alpha = 1)
   #Add legend
@@ -211,6 +193,24 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
       p2 <- p2 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
       p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval), colour=highlighter)
+    }
+  }
+  if(!missing(annotate_p)){
+    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
+      print("Consider installing 'ggrepel' for improved text annotation")
+      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+    } else {
+      require("ggrepel", quietly = TRUE)
+      p2 <- p2 + geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+    }
+  }
+  if(!missing(annotate_snp)){
+    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE){
+      print("Consider installing 'ggrepel' for improved text annotation")
+      p2 <- p2 + geom_text(data=d_order[d_order$SNP %in% annotate_snp & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+    } else {
+      require("ggrepel", quietly = TRUE)
+      p2 <- p2 + geom_text_repel(data=d_order[d_order$SNP %in% annotate_snp & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
     }
   }
   #Add title and y axis title

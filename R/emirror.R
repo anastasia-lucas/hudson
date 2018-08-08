@@ -187,28 +187,6 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     p1 <- p1 + scale_colour_manual(name = "Color", values = topcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = topcols, guides(alpha=FALSE))
     p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = bottomcols, guides(alpha=FALSE))
   }
-  if(!missing(annotate_p)){
-    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
-      print("Consider installing 'ggrepel' for improved text annotation")
-      p1 <- p1 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
-      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
-    } else {
-      require("ggrepel", quietly = TRUE)
-      p1 <- p1 + geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
-      p2 <- p2 + geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
-    }
-  }
-  if(!missing(annotate_var)){
-    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE){
-      print("Consider installing 'ggrepel' for improved text annotation")
-      p1 <- p1 + geom_text(data=d_order[d_order$Variable %in% annotate_var & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
-      p2 <- p2 + geom_text(data=d_order[d_order$Variable %in% annotate_var & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
-    } else {
-      require("ggrepel", quietly = TRUE)
-      p1 <- p1 + geom_text_repel(data=d_order[d_order$Variable %in% annotate_var & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
-      p2 <- p2 + geom_text_repel(data=d_order[d_order$Variable %in% annotate_var & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
-    }
-  }
   #Highlight if given
   if(!missing(highlight_var)){
     if("Shape" %in% topn){
@@ -238,7 +216,28 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
       p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval), colour=highlighter)
     }
   }
-
+  if(!missing(annotate_p)){
+    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
+      print("Consider installing 'ggrepel' for improved text annotation")
+      p1 <- p1 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
+      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
+    } else {
+      require("ggrepel", quietly = TRUE)
+      p1 <- p1 + geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
+      p2 <- p2 + geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
+    }
+  }
+  if(!missing(annotate_var)){
+    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE){
+      print("Consider installing 'ggrepel' for improved text annotation")
+      p1 <- p1 + geom_text(data=d_order[d_order$Variable %in% annotate_var & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
+      p2 <- p2 + geom_text(data=d_order[d_order$Variable %in% annotate_var & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
+    } else {
+      require("ggrepel", quietly = TRUE)
+      p1 <- p1 + geom_text_repel(data=d_order[d_order$Variable %in% annotate_var & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
+      p2 <- p2 + geom_text_repel(data=d_order[d_order$Variable %in% annotate_var & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
+    }
+  }
   #Add title and y axis title
   p1 <- p1 + ylab(yaxislab)
   p2 <- p2 + ylab(yaxislab)
