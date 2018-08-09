@@ -8,7 +8,8 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
   toptitle = NULL, bottomtitle = NULL, annotate_var, annotate_p,
   highlight_var, highlight_p, highlighter = "red", color1 = "#AAAAAA",
   color2 = "#4D4D4D", groupcolors, rotatelabels = FALSE, labelangle,
-  file = "emirror", hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
+  background = "variegated", grpblocks = TRUE, file = "emirror",
+  hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
 }
 \arguments{
 \item{top}{data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional}
@@ -21,7 +22,7 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 
-\item{yaxis}{label for y-axis, automatically set if log10=TRUE}
+\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
 
 \item{opacity}{opacity of points, from 0 to 1, useful for dense plots}
 
@@ -46,6 +47,10 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 \item{groupcolors}{named list of colors where names correspond to data in 'Color' column}
 
 \item{labelangle}{angle to rotate}
+
+\item{background}{variegated or white}
+
+\item{grpblocks}{boolean, turns on x-axis group marker blocks}
 
 \item{file}{file name of saved image}
 

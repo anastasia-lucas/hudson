@@ -8,7 +8,8 @@ phemirror(top, bottom, phegroup, tline, bline, log10 = TRUE, yaxis,
   opacity = 1, annotate_snp, annotate_p, highlight_snp, highlight_p,
   highlighter = "red", toptitle = NULL, bottomtitle = NULL,
   chrcolor1 = "#AAAAAA", chrcolor2 = "#4D4D4D", groupcolors,
-  file = "phemirror", hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
+  background = "variegated", chrblocks = FALSE, file = "phemirror",
+  hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
 }
 \arguments{
 \item{top}{data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
@@ -23,7 +24,7 @@ phemirror(top, bottom, phegroup, tline, bline, log10 = TRUE, yaxis,
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 
-\item{yaxis}{label for y-axis, automatically set if log10=TRUE}
+\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
 
 \item{opacity}{opacity of points, from 0-1, useful for dense plots}
 
@@ -46,6 +47,10 @@ phemirror(top, bottom, phegroup, tline, bline, log10 = TRUE, yaxis,
 \item{chrcolor2}{second alternating color for chromosome}
 
 \item{groupcolors}{named list of colors where names correspond to data in 'PHE' or 'Group' column}
+
+\item{background}{variegated or white}
+
+\item{chrblocks}{boolean, turns on x-axis chromosome marker blocks}
 
 \item{file}{file name of saved image}
 

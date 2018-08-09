@@ -7,8 +7,8 @@
 gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
   annotate_snp, annotate_p, toptitle = NULL, bottomtitle = NULL,
   highlight_snp, highlight_p, highlighter = "red", chrcolor1 = "#AAAAAA",
-  chrcolor2 = "#4D4D4D", file = "gmirror", hgt = 7, hgtratio = 0.5,
-  wi = 12, res = 300)
+  chrcolor2 = "#4D4D4D", background = "variegated", chrblocks = FALSE,
+  file = "gmirror", hgt = 7, hgtratio = 0.5, wi = 12, res = 300)
 }
 \arguments{
 \item{top}{data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape}
@@ -21,7 +21,7 @@ gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 
-\item{yaxis}{label for y-axis, automatically set if log10=TRUE}
+\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
 
 \item{opacity}{opacity of points, from 0 to 1, useful for dense plots}
 
@@ -42,6 +42,10 @@ gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 \item{chrcolor1}{first alternating color for chromosome}
 
 \item{chrcolor2}{second alternating color for chromosome}
+
+\item{background}{variegated or white}
+
+\item{chrblocks}{boolean, turns on x-axis chromosome marker blocks}
 
 \item{file}{file name of saved image}
 

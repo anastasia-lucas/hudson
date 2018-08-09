@@ -8,7 +8,7 @@
 #' @param tline optional pvalue threshold to draw red line at in top plot
 #' @param bline optional pvalue threshold to draw red line at in bottom plot
 #' @param log10 plot -log10() of pvalue column, boolean
-#' @param yaxis label for y-axis, automatically set if log10=TRUE
+#' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0 to 1, useful for dense plots
 #' @param annotate_snp list of RSIDs to annotate
 #' @param annotate_p pvalue threshold to annotate
@@ -19,6 +19,8 @@
 #' @param highlight_snp list of snps to highlight
 #' @param highlight_p pvalue threshold to highlight
 #' @param highlighter color to highlight
+#' @param background variegated or white
+#' @param chrblocks boolean, turns on x-axis chromosome marker blocks
 #' @param file file name of saved image
 #' @param hgt height of plot in inches
 #' @param hgtratio height ratio of plots, equal to top plot proportion
@@ -29,7 +31,7 @@
 #' @examples
 #' gmirror(top, bottom, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, file, hgt, wi, res)
 
-gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
+gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", background="variegated", chrblocks=FALSE, file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -80,20 +82,25 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
   #Info for y-axis
   if(log10==TRUE){
     d_order$pval <- -log10(d_order$pvalue)
-    yaxislab <- expression(paste("-log"[10], "(p-value)", sep=""))
+    yaxislab1 <- expression(paste("-log"[10], "(p-value)", sep=""))
+    yaxislab2 <- expression(paste("-log"[10], "(p-value)", sep=""))
     if(!missing(tline)) {tredline <- -log10(tline)}
     if(!missing(bline)) {bredline <- -log10(bline)}
   } else {
     d_order$pval <- d_order$pvalue
-    yaxislab <- yaxis
+    yaxislab1 <- yaxis[1]
+    yaxislab2 <- yaxis[2]
     if(!missing(tline)) {tredline <- tline}
     if(!missing(bline)) {bredline <- bline}
   }
   yaxismax <- max(d_order$pval[which(d_order$pval< Inf)])
+  
+  #Theme options
+  backpanel <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = min(d_order$pval), ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
 
   #Start plotting
   #TOP PLOT
-  p1 <- ggplot() + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = 0, ymax = Inf, fill=factor(shademap)), alpha = 0.5)
+  p1 <- ggplot() + eval(parse(text=backpanel))
   #Add shape info if available
   if("Shape" %in% topn){
     p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), alpha=opacity)
@@ -101,12 +108,14 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
     p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], aes(x=pos_index, y=pval, color=factor(Color)), alpha=opacity)
   }
   p1 <- p1 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
-  p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = 0, fill=as.factor(Color)), alpha = 1)
+  if(chrblocks==TRUE){
+    p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+  }
   p1 <- p1 + scale_colour_manual(name = "Color", values = newcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = newcols, guides(alpha=FALSE))
   p1 <- p1 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
 
   #BOTTOM PLOT
-  p2 <- ggplot() + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = 0, ymax = Inf, fill=factor(shademap)), alpha = 0.5)
+  p2 <- ggplot() + eval(parse(text=backpanel))
   #Add shape info if available
   if("Shape" %in% bottomn){
     p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), alpha=opacity)
@@ -114,7 +123,9 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
     p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=factor(Color)), alpha=opacity)
   }
   p2 <- p2 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
-  p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = 0, fill=as.factor(Color)), alpha = 1)
+  if(chrblocks==TRUE){
+    p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+  }  
   p2 <- p2 + scale_colour_manual(name = "Color", values = newcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = newcols, guides(alpha=FALSE))
   p2 <- p2 + theme(axis.text.x=element_text(angle=90), panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
 
@@ -178,13 +189,26 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
     }
   }
   #Add title and y axis title
-  p1 <- p1 + ylab(yaxislab)
-  p2 <- p2 + ylab(yaxislab)
+  p1 <- p1 + ylab(yaxislab1)
+  p2 <- p2 + ylab(yaxislab2)
   
   #Format
-  p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
-  p2 <- p2+scale_y_reverse(limits=c(yaxismax,0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+  if(chrblocks==TRUE){
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax, 0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    
+  } else {
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(0, yaxismax),expand=expand_scale(mult=c(0,0.1)))
+    #p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax)) + expand_limits(x=c(0,0))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax,0), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    #p2 <- p2+scale_y_reverse(limits=c(yaxismax,0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    
+  }
 
+  if(background=="white"){
+    p1 <- p1 + theme(panel.background = element_rect(fill="white"))
+    p2 <- p2 + theme(panel.background = element_rect(fill="white"))
+  }
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio,1-hgtratio))

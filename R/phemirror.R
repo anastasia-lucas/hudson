@@ -9,7 +9,7 @@
 #' @param tline optional pvalue threshold to draw red line at in top plot
 #' @param bline optional pvalue threshold to draw red line at in bottom plot
 #' @param log10 plot -log10() of pvalue column, boolean
-#' @param yaxis label for y-axis, automatically set if log10=TRUE
+#' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0-1, useful for dense plots
 #' @param annotate_snp list of RSIDs to annotate
 #' @param annotate_p pvalue threshold to annotate
@@ -21,6 +21,8 @@
 #' @param highlight_p pvalue threshold to highlight
 #' @param highlighter color to highlight
 #' @param groupcolors named list of colors where names correspond to data in 'PHE' or 'Group' column
+#' @param background variegated or white
+#' @param chrblocks boolean, turns on x-axis chromosome marker blocks
 #' @param file file name of saved image
 #' @param hgt height of plot in inches
 #' @param hgtratio height ratio of plots, equal to top plot proportion
@@ -31,7 +33,7 @@
 #' @examples
 #' phemirror(top. bottom, phegroup, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, groupcolors, file, hgt, wi, res)
 
-phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, file="phemirror", hgtratio=0.5, hgt=7, wi=12, res=300 ){
+phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, background="variegated", chrblocks=FALSE, file="phemirror", hgtratio=0.5, hgt=7, wi=12, res=300 ){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -99,20 +101,25 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
   #Info for y-axis
   if(log10==TRUE){
     d_order$pval <- -log10(d_order$pvalue)
-    yaxislab <- expression(paste("-log"[10], "(p-value)", sep=""))
+    yaxislab1 <- expression(paste("-log"[10], "(p-value)", sep=""))
+    yaxislab2 <- expression(paste("-log"[10], "(p-value)", sep=""))
     if(!missing(tline)) {tredline <- -log10(tline)}
     if(!missing(bline)) {bredline <- -log10(bline)}
   } else {
     d_order$pval <- d_order$pvalue
-    yaxislab <- yaxis
+    yaxislab1 <- yaxis[1]
+    yaxislab2 <- yaxis[2]
     if(!missing(tline)) {tredline <- tline}
     if(!missing(bline)) {bredline <- bline}
   }
   yaxismax <- max(d_order$pval[which(d_order$pval< Inf)])
 
+  #Theme options
+  backpanel <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = min(d_order$pval), ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
+  
   #Start plotting
   #TOP PLOT
-  p1 <- ggplot() + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = 0, ymax = Inf, fill=factor(shademap)), alpha = 0.5)
+  p1 <- ggplot() + eval(parse(text=backpanel))
   #Add shape info if available
   if("Shape" %in% topn){
     p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), alpha=opacity)
@@ -120,14 +127,16 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
     p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], aes(x=pos_index, y=pval, color=factor(Color)), alpha=opacity)
   }
   p1 <- p1 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
-  p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = 0, fill=as.factor(Color)), alpha = 1)
+  if(chrblocks==TRUE){
+    p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+  }
   #Add legend
   p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols, guides(alpha=FALSE))
   p1 <- p1 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
   
   #Start plotting
   #BOTTOM PLOT
-  p2 <- ggplot() + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = 0, ymax = Inf, fill=factor(shademap)), alpha = 0.5)
+  p2 <- ggplot() + eval(parse(text=backpanel))
   #Add shape info if available
   if("Shape" %in% bottomn){
     p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), alpha=opacity)
@@ -135,7 +144,9 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
     p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=factor(Color)), alpha=opacity)
   }
   p2 <- p2 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
-  p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = 0, fill=as.factor(Color)), alpha = 1)
+  if(chrblocks==TRUE){
+    p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+  } 
   #Add legend
   p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols, guides(alpha=FALSE))
   p2 <- p2 + theme(axis.text.x=element_text(angle=90), panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
@@ -200,12 +211,22 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
     }
   }
   #Add title and y axis title
-  p1 <- p1 + ylab(yaxislab)
-  p2 <- p2 + ylab(yaxislab)
+  p1 <- p1 + ylab(yaxislab1)
+  p2 <- p2 + ylab(yaxislab2)
 
-  #Format
-  p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
-  p2 <- p2+scale_y_reverse(limits=c(yaxismax,0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+  if(chrblocks==TRUE){
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax, 0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    
+  } else {
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(0, yaxismax),expand=expand_scale(mult=c(0,0.1)))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax,0), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+  }
+  
+  if(background=="white"){
+    p1 <- p1 + theme(panel.background = element_rect(fill="white"))
+    p2 <- p2 + theme(panel.background = element_rect(fill="white"))
+  }
 
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
