@@ -12,9 +12,9 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
   hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
 }
 \arguments{
-\item{top}{data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional}
+\item{top}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
 
-\item{bottom}{data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional}
+\item{bottom}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
 
 \item{tline}{optional pvalue threshold to draw red line at in top plot}
 

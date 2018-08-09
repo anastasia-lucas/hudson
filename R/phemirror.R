@@ -87,14 +87,30 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
     } else {
       require("RColorBrewer", quietly=TRUE)
     }
-    getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
     #Top Colors
     ngroupcolors <- nlevels(factor(d_order$Color[d_order$Location=="Top"]))
-    topcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+    if(ngroupcolors>15){
+      getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
+      topcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+    } else {
+      pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+                      "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+                      "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+      topcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), pal[1:ngroupcolors], "#FFFFFF", "#EBEBEB")
+    }
     names(topcols) <-c(levels(factor(lims$Color)), levels(factor(d_order$Color[d_order$Location=="Top"])), "shade_ffffff", "shade_ebebeb")
     #Bottom Colors
     ngroupcolors <- nlevels(factor(d_order$Color[d_order$Location=="Bottom"]))
-    bottomcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+    if(ngroupcolors>15){
+      getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
+      bottomcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+    } else {
+      pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+                      "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+                      "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+      bottomcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), pal[1:ngroupcolors], "#FFFFFF", "#EBEBEB")
+    }
+    
     names(bottomcols) <-c(levels(factor(lims$Color)), levels(factor(d_order$Color[d_order$Location=="Bottom"])), "shade_ffffff", "shade_ebebeb")
   }
 

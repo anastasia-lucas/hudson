@@ -4,8 +4,8 @@
 #' Note: There is an issue with dev.off() if using RStudio
 #' Dependencies: ggplot2, gridExtra
 #' Suggested: RColorBrewer, ggrepel
-#' @param top data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional
-#' @param bottom data frame, columns one and two must be Variable and pvalue; Group, Shape and Color optional
+#' @param top data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional
+#' @param bottom data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional
 #' @param tline optional pvalue threshold to draw red line at in top plot
 #' @param bline optional pvalue threshold to draw red line at in bottom plot
 #' @param log10 plot -log10() of pvalue column, boolean
@@ -81,32 +81,32 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
   d$rowid <- seq.int(nrow(d))
   dinfo <- d[, colnames(d) %in% c("rowid", "Color", "pval", "Location", "Shape"), drop=FALSE]
 
-  #If no group, plot raw data
-  if(!"Group" %in% colnames(d)){
-    print("Warning: Mirror plots contain a shared x-axis, please add grouping information if the axes are different")
-    d_order <- merge(d[, colnames(d) %in% c("Variable", "pvalue", "rowid")], dinfo, by="rowid")
-    if("Shape" %in% names(d)){
-      if("Color" %in% names(d)){
-         p1 <- ggplot() + geom_point(data=d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, shape=factor(Shape), color=Color), alpha=opacity)
-        p2 <- ggplot() + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, shape=factor(Shape), color=Color), alpha=opacity)
-      } else {
-        p1 <- ggplot() + geom_point(data=d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, shape=factor(Shape)), alpha=opacity)
-        p2 <- ggplot() + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, shape=factor(Shape)), alpha=opacity)
-      }
-      p1 <- p1 + theme(axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
-      p2 <- p2 + theme(axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
-    } else {
-      if("Color" %in% names(d)){
-        p1 <- ggplot(d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, color=Color)) + geom_point()
-        p1 <- p1 + theme(axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
-        p2 <- ggplot(d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, color=Color)) + geom_point()
-        p2 <- p2 + theme(axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
-      } else {
-        p1 <- ggplot(d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval)) + geom_point() + theme(axis.title.x=element_blank())
-        p2 <- ggplot(d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval)) + geom_point() + theme(axis.title.x=element_blank())
-      }
-    }
-  } else {
+  ##If no group, plot raw data
+  #if(!"Group" %in% colnames(d)){
+  #  print("Warning: Mirror plots contain a shared x-axis, please add grouping information if the axes are different")
+  #  d_order <- merge(d[, colnames(d) %in% c("Variable", "pvalue", "rowid")], dinfo, by="rowid")
+  #  if("Shape" %in% names(d)){
+  #    if("Color" %in% names(d)){
+  #       p1 <- ggplot() + geom_point(data=d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, shape=factor(Shape), color=Color), alpha=opacity)
+  #      p2 <- ggplot() + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, shape=factor(Shape), color=Color), alpha=opacity)
+  #    } else {
+  #      p1 <- ggplot() + geom_point(data=d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, shape=factor(Shape)), alpha=opacity)
+  #      p2 <- ggplot() + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, shape=factor(Shape)), alpha=opacity)
+  #    }
+  #    p1 <- p1 + theme(axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
+  #    p2 <- p2 + theme(axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
+  #  } else {
+  #    if("Color" %in% names(d)){
+  #      p1 <- ggplot(d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, color=Color)) + geom_point()
+  #      p1 <- p1 + theme(axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
+  #      p2 <- ggplot(d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, color=Color)) + geom_point()
+  #      p2 <- p2 + theme(axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
+  #    } else {
+  #      p1 <- ggplot(d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval)) + geom_point() + theme(axis.title.x=element_blank())
+  #      p2 <- ggplot(d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval)) + geom_point() + theme(axis.title.x=element_blank())
+  #    }
+  #  }
+  #} else {
     #Create position index
     subd <- d[, c("Variable", "Group", "pvalue", "rowid")]
     d_order <- subd[order(subd$Group, subd$Variable),]
@@ -138,16 +138,31 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
         } else {
           require("RColorBrewer", quietly=TRUE)
         }
-        getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
+        
         #Top Colors
         ngroupcolors <- nlevels(factor(d$Color[d$Location=="Top"]))
-        topcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+        if(ngroupcolors > 15){
+          getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
+          topcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+        } else {
+          pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+                          "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+                          "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+          topcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), pal[1:ngroupcolors], "#FFFFFF", "#EBEBEB")
+        }
         names(topcols) <-c(levels(factor(lims$Color)), levels(factor(d$Color[d$Location=="Top"])), "shade_ffffff", "shade_ebebeb")
         #Bottom Colors
         ngroupcolors <- nlevels(factor(d$Color[d$Location=="Bottom"]))
-        bottomcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+        if(ngroupcolors > 15){
+          getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
+          bottomcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+        } else {
+          pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+                          "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+                          "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+          bottomcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), pal[1:ngroupcolors], "#FFFFFF", "#EBEBEB")
+        }
         names(bottomcols) <-c(levels(factor(lims$Color)), levels(factor(d$Color[d$Location=="Bottom"])), "shade_ffffff", "shade_ebebeb")
-
       }
     } else {
       #Color by Group instead
@@ -188,7 +203,7 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
       p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
     }
     p2 <- p2 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
-  }
+  #}
   if("Color" %in% names(d)){
     #Add legend
     p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols, guides(alpha=FALSE))
@@ -275,8 +290,6 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     p2 <- p2 + theme(panel.background = element_rect(fill="white"))
   }
   #Format
-  #p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
-  #p2 <- p2+scale_y_reverse(limits=c(yaxismax,0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   if(rotatelabels==TRUE){p1 <- p1 + theme(axis.text.x = element_text(angle=labelangle))}
 
   #Save
