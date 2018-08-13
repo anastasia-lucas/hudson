@@ -8,8 +8,8 @@ phemirror(top, bottom, phegroup, tline, bline, log10 = TRUE, yaxis,
   opacity = 1, annotate_snp, annotate_p, highlight_snp, highlight_p,
   highlighter = "red", toptitle = NULL, bottomtitle = NULL,
   chrcolor1 = "#AAAAAA", chrcolor2 = "#4D4D4D", groupcolors,
-  background = "variegated", chrblocks = TRUE, file = "phemirror",
-  hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
+  freey = FALSE, background = "variegated", chrblocks = TRUE,
+  file = "phemirror", hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
 }
 \arguments{
 \item{top}{data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
@@ -47,6 +47,8 @@ phemirror(top, bottom, phegroup, tline, bline, log10 = TRUE, yaxis,
 \item{chrcolor2}{second alternating color for chromosome}
 
 \item{groupcolors}{named list of colors where names correspond to data in 'PHE' or 'Group' column}
+
+\item{freey}{allow y-axes to scale with the data}
 
 \item{background}{variegated or white}
 

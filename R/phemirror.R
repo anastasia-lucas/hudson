@@ -21,6 +21,7 @@
 #' @param highlight_p pvalue threshold to highlight
 #' @param highlighter color to highlight
 #' @param groupcolors named list of colors where names correspond to data in 'PHE' or 'Group' column
+#' @param freey allow y-axes to scale with the data
 #' @param background variegated or white
 #' @param chrblocks boolean, turns on x-axis chromosome marker blocks
 #' @param file file name of saved image
@@ -33,7 +34,7 @@
 #' @examples
 #' phemirror(top. bottom, phegroup, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, groupcolors, file, hgt, wi, res)
 
-phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, background="variegated", chrblocks=TRUE, file="phemirror", hgtratio=0.5, hgt=7, wi=12, res=300 ){
+phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, freey=FALSE, background="variegated", chrblocks=TRUE, file="phemirror", hgtratio=0.5, hgt=7, wi=12, res=300 ){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -128,14 +129,19 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
     if(!missing(tline)) {tredline <- tline}
     if(!missing(bline)) {bredline <- bline}
   }
-  yaxismax <- max(d_order$pval[which(d_order$pval< Inf)])
-
+  
+  yaxismax1 <- ifelse(freey==FALSE, max(d_order$pval[which(d_order$pval< Inf)]), max(d_order$pval[which(d_order$pval< Inf) & d_order$Location=="Top"]))
+  yaxismax2 <- ifelse(freey==FALSE, max(d_order$pval[which(d_order$pval< Inf)]), max(d_order$pval[which(d_order$pval< Inf) & d_order$Location=="Bottom"]))
+  yaxismin1 <- ifelse(freey==FALSE, 0, min(d_order$pval[d_order$Location=="Top"]))
+  yaxismin2 <- ifelse(freey==FALSE, 0, min(d_order$pval[d_order$Location=="Bottom"]))
+  
   #Theme options
-  backpanel <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = min(d_order$pval), ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
+  backpanel1 <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = yaxismin1, ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
+  backpanel2 <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = yaxismin2, ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
   
   #Start plotting
   #TOP PLOT
-  p1 <- ggplot() + eval(parse(text=backpanel))
+  p1 <- ggplot() + eval(parse(text=backpanel1))
   #Add shape info if available
   if("Shape" %in% topn){
     p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), alpha=opacity)
@@ -152,7 +158,7 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
   
   #Start plotting
   #BOTTOM PLOT
-  p2 <- ggplot() + eval(parse(text=backpanel))
+  p2 <- ggplot() + eval(parse(text=backpanel2))
   #Add shape info if available
   if("Shape" %in% bottomn){
     p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), alpha=opacity)
@@ -231,12 +237,12 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
   p2 <- p2 + ylab(yaxislab2)
 
   if(chrblocks==TRUE){
-    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
-    p2 <- p2+scale_y_reverse(limits=c(yaxismax, 0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(yaxismin1,yaxismax1))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
     
   } else {
-    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(0, yaxismax),expand=expand_scale(mult=c(0,0.1)))
-    p2 <- p2+scale_y_reverse(limits=c(yaxismax,0), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expand_scale(mult=c(0,0.1)))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax2,yaxismin2), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   }
   
   if(background=="white"){

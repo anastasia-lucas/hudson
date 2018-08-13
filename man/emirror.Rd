@@ -8,8 +8,8 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
   toptitle = NULL, bottomtitle = NULL, annotate_var, annotate_p,
   highlight_var, highlight_p, highlighter = "red", color1 = "#AAAAAA",
   color2 = "#4D4D4D", groupcolors, rotatelabels = FALSE, labelangle,
-  background = "variegated", grpblocks = FALSE, file = "emirror",
-  hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
+  freey = FALSE, background = "variegated", grpblocks = FALSE,
+  file = "emirror", hgtratio = 0.5, hgt = 7, wi = 12, res = 300)
 }
 \arguments{
 \item{top}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
@@ -47,6 +47,8 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 \item{groupcolors}{named list of colors where names correspond to data in 'Color' column}
 
 \item{labelangle}{angle to rotate}
+
+\item{freey}{allow y-axes to scale with data}
 
 \item{background}{variegated or white}
 

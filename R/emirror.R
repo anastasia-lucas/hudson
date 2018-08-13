@@ -23,6 +23,7 @@
 #' @param groupcolors named list of colors where names correspond to data in 'Color' column
 #' @param rotatelabel boolean, rotate axis labels?
 #' @param labelangle angle to rotate
+#' @param freey allow y-axes to scale with data
 #' @param background variegated or white
 #' @param grpblocks boolean, turns on x-axis group marker blocks
 #' @param file file name of saved image
@@ -35,7 +36,7 @@
 #' @examples
 #' emirror(top, bottom, line, file="emirror", hgt=7, wi=12, res=300 )
 
-emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p, highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, background="variegated", grpblocks=FALSE, file="emirror", hgtratio=0.5, hgt=7, wi=12, res=300){
+emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p, highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, freey=FALSE, background="variegated", grpblocks=FALSE, file="emirror", hgtratio=0.5, hgt=7, wi=12, res=300){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
     stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
   } else {
@@ -72,10 +73,14 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     if(!missing(tline)) {tredline <- tline}
     if(!missing(bline)) {bredline <- bline}
   }
-  yaxismax <- max(d$pval[which(d$pval< Inf)])
+  yaxismax1 <- ifelse(freey==FALSE, max(d$pval[which(d$pval< Inf)]), max(d$pval[which(d$pval< Inf) & d$Location=="Top"]))
+  yaxismax2 <- ifelse(freey==FALSE, max(d$pval[which(d$pval< Inf)]), max(d$pval[which(d$pval< Inf) & d$Location=="Bottom"]))
+  yaxismin1 <- ifelse(freey==FALSE, 0, min(d$pval[d$Location=="Top"]))
+  yaxismin2 <- ifelse(freey==FALSE, 0, min(d$pval[d$Location=="Bottom"]))
 
   #Theme options
-  backpanel <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = min(d_order$pval), ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
+  backpanel1 <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = yaxismin1, ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
+  backpanel2 <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = yaxismin2, ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
   
   #Save to merge later
   d$rowid <- seq.int(nrow(d))
@@ -177,7 +182,7 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     d_order <- merge(d_order, dinfo, by="rowid")
 
     #TOP PLOT
-    p1 <- ggplot() + eval(parse(text=backpanel))
+    p1 <- ggplot() + eval(parse(text=backpanel1))
     #Add shape info if available
     if("Shape" %in% names(d)){
       p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], aes(x=pos_index, y=pval, color=Color, shape=factor(Shape)), alpha=opacity)
@@ -191,7 +196,7 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     p1 <- p1 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
 
     #BOTTOM PLOT
-    p2 <- ggplot() + eval(parse(text=backpanel))
+    p2 <- ggplot() + eval(parse(text=backpanel2))
     #Add shape info if available
     if("Shape" %in% bottomn){
       p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=Color, shape=factor(Shape)), alpha=opacity)
@@ -279,11 +284,11 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
 
   #Format
   if(grpblocks==TRUE){
-    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(0,yaxismax))
-    p2 <- p2+scale_y_reverse(limits=c(yaxismax, 0)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(yaxismin1,yaxismax1))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   } else {
-    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(0, yaxismax),expand=expand_scale(mult=c(0,0.1)))
-    p2 <- p2+scale_y_reverse(limits=c(yaxismax,0), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expand_scale(mult=c(0,0.1)))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax1,yaxismin2), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   }
   if(background=="white"){
     p1 <- p1 + theme(panel.background = element_rect(fill="white"))
