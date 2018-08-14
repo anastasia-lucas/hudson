@@ -73,5 +73,7 @@ Dependencies: ggplot2, gridExtra, RColorBrewer
 Suggested: ggrepel
 }
 \examples{
-phemirror(top. bottom, phegroup, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, groupcolors, file, hgt, wi, res)
+data(phewas.t)
+data(phewas.b)
+phemirror(top=phewas.t, bottom = phewas.b, toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
 }

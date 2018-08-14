@@ -69,5 +69,7 @@ Dependencies: ggplot2, gridExtra
 Suggested: RColorBrewer, ggrepel
 }
 \examples{
-gmirror(top, bottom, line, log10, yaxis, opacity, annotate_snp, annotate_p, title, chrcolor1, chrcolor2, file, hgt, wi, res)
+data(gwas.t)
+data(gwas.b)
+gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", highlight_p = 0.05/nrow(gwas.t), highlighter="green")
 }

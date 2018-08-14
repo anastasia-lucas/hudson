@@ -76,5 +76,7 @@ Dependencies: ggplot2, gridExtra
 Suggested: RColorBrewer, ggrepel
 }
 \examples{
-emirror(top, bottom, line, file="emirror", hgt=7, wi=12, res=300 )
+data(ewas.t)
+data(ewas.b)
+emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, highlight_p=0.0001, highlighter="green", toptitle = "EWAS Comparison Example: Data 1", bottomtitle = "EWAS Comparison Example: Data 2")
 }
