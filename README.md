@@ -16,38 +16,14 @@ This package uses ggplot2, gridExtra, and RColorBrewer. ggrepel is suggested for
 ### Create a mirrored Manhattan plot using GWAS data
 ```
 library(hudson)
-#Generate some data
-t <- data.frame(SNP=paste("rs", seq(1:5000), sep=""),
-                CHR=rep(c(1:22, "X", "Y"), length.out=5000, each=200),
-                POS=rep(seq(1, 10000, by = 200), length.out=5000),
-                pvalue=runif(n=5000))
-b <- data.frame(SNP=paste("rs", seq(1:5000), sep=""),
-                CHR=rep(c(1:22, "X", "Y"), length.out=5000, each=200),
-                POS=rep(seq(1, 10000, by = 200), length.out=5000),
-                pvalue=runif(n=5000))
-head(t)
-  SNP CHR  POS    pvalue
-1 rs1   1    1 0.7489581
-2 rs2   1  201 0.6775381
-3 rs3   1  401 0.4838361
-4 rs4   1  601 0.1743456
-5 rs5   1  801 0.1880735
-6 rs6   1 1001 0.6829087
-head(b)
-  SNP CHR  POS    pvalue
-1 rs1   1    1 0.3163273
-2 rs2   1  201 0.5892635
-3 rs3   1  401 0.7978299
-4 rs4   1  601 0.7216598
-5 rs5   1  801 0.7388363
-6 rs6   1 1001 0.8230513
-
-#Create a basic plot
-gmirror(top=t, bottom=b)
+#Create a basic plot with Bonferroni lines and highlighting using the toy gwas datasets
+data(gwas.t)
+data(gwas.b)
+gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", highlight_p = 0.05/nrow(gwas.t), highlighter="green")
 
 ```
 
-![Imgur](https://i.imgur.com/5wYjMzJ.png)
+![Imgur](https://i.imgur.com/FNjIaCM.png)
 
 ```
 #Add meta information and text annotations
