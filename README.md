@@ -34,7 +34,8 @@ gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas
 library(hudson)
 data(phewas.t)
 data(phewas.b)
-phemirror(top=phewas.t, bottom = phewas.b, toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
+phemirror(top=phewas.t, bottom = phewas.b, toptitle = "PheWAS Example: Data 1", 
+bottomtitle = "PheWAS Example: Data 2")
 ```
 ![Imgur](https://i.imgur.com/9LyKPi5.png)
 
@@ -44,9 +45,8 @@ phemirror(top=phewas.t, bottom = phewas.b, toptitle = "PheWAS Example: Data 1", 
 library(hudson)
 data(ewas.t)
 data(ewas.b)
-emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, highlight_p=0.0001, highlighter="green", toptitle = "EWAS Comparison Example: Data 1", bottomtitle = "EWAS Comparison Example: Data 2")
-
-
+emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, highlight_p=0.0001, highlighter="green", 
+toptitle = "EWAS Comparison Example: Data 1", bottomtitle = "EWAS Comparison Example: Data 2")
 ```
 
 ![Imgur](https://i.imgur.com/ANRXr0H.png)
