@@ -15,8 +15,8 @@ This package uses ggplot2, gridExtra, and RColorBrewer. ggrepel is suggested for
 
 ### Create a mirrored Manhattan plot using GWAS data
 ```
-library(hudson)
 #Create a basic plot with Bonferroni lines and highlighting using the toy gwas datasets
+library(hudson)
 data(gwas.t)
 data(gwas.b)
 gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", highlight_p = 0.05/nrow(gwas.t), highlighter="green")
@@ -25,67 +25,31 @@ gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas
 
 ![Imgur](https://i.imgur.com/FNjIaCM.png)
 
-```
-#Add meta information and text annotations
-#Add shape information to our datasets
-t$Shape <- rep(paste("S", seq(1:3), sep="") , length.out=5000, each=1)
-b$Shape <- rep(paste("S", seq(1:3), sep="") , length.out=5000, each=1)
-
-#Create more informative plot
-gmirror(top=t, bottom=b, tline=0.0001, bline=0.0001, annotate_p=0.0001, chrcolor1="#3FA7D6", chrcolor2="#FAC05E", toptitle="Top Plot", bottomtitle="Bottom Plot")
-```
-![Imgur](https://i.imgur.com/1yrlwsk.png)
 
 ### Create a mirrored Manhattan plot using PheWAS data
 
 ```
+#Create a pbasic PheWAS plot
+#Notice that chrblocks=TRUE by default here
 library(hudson)
-#Add some phenotype information
-t$PHE <- rep(paste("Pheno", seq(1:5), sep="") , length.out=5000, each=1)
-b$PHE <- rep(paste("Pheno", seq(1:5), sep="") , length.out=5000, each=1)
-t <- t[, c(6,1:5)]
-b <- b[, c(6,1:5)]
-
-#Create a plot with highlight and annotation by p-value threshold
-phemirror(top=t, bottom=b, highlight_p = 0.0001, highlighter="green", annotate_p=0.0001)
+data(phewas.t)
+data(phewas.b)
+phemirror(top=phewas.t, bottom = phewas.b, toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
 ```
-![Imgur](https://i.imgur.com/XM9sJ4z.jpg)
+![Imgur](https://i.imgur.com/9LyKPi5.png)
 
 ### Create a mirrored Manhattan plot using EWAS data
 ```
+#Generate a plot and highlight by p-value threshold
 library(hudson)
-#Generate some data
-t <- data.frame(Variable=paste("Var", seq(1:5000), sep=""), 
-                pvalue=runif(n=5000), 
-                Group=rep(paste("G", seq(1:6), sep=""), length.out=5000, each=1),
-                Shape=rep(paste("S", seq(1:5), sep="") , length.out=5000, each=1))
-b <- data.frame(Variable=paste("Var", seq(1:5000), sep=""),
-                pvalue=runif(n=5000), 
-                Group=rep(paste("G", seq(1:6), sep=""), length.out=5000, each=1),
-                Shape=rep(paste("S", seq(1:5), sep="") , length.out=5000, each=1))
-head(t)
-  Variable    pvalue Group Shape
-1     Var1 0.1430880    G1    S1
-2     Var2 0.6055253    G2    S2
-3     Var3 0.8830645    G3    S3
-4     Var4 0.1560467    G4    S4
-5     Var5 0.7784929    G5    S5
-6     Var6 0.9709326    G6    S1
-head(b)
-  Variable    pvalue Group Shape
-1     Var1 0.5381795    G1    S1
-2     Var2 0.9858681    G2    S2
-3     Var3 0.7146113    G3    S3
-4     Var4 0.3732309    G4    S4
-5     Var5 0.3375573    G5    S5
-6     Var6 0.4545325    G6    S1
+data(ewas.t)
+data(ewas.b)
+emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, highlight_p=0.0001, highlighter="green", toptitle = "EWAS Comparison Example: Data 1", bottomtitle = "EWAS Comparison Example: Data 2")
 
-#Generate a plot and highlight by variable name
-emirror(top=t, bottom=b, highlight_var = c("Var1266", "Var3682"), color1="#587291", color2="#2F97C1")
 
 ```
 
-![Imgur](https://i.imgur.com/NUkQ9jb.png)
+![Imgur](https://i.imgur.com/ANRXr0H.png)
 
-Note that although you can rotate the axis labels by changing the ```rotatelabel``` and ```labelangle``` parameters, you'll probaby want to keep your "Group" names pretty short if some of your categories don't have a lot of variables in them.
+Note that for EWAS plots in particular, although you can rotate the axis labels by changing the ```rotatelabel``` and ```labelangle``` parameters, you'll probaby want to keep your "Group" names pretty short if some of your categories don't have a lot of variables in them.
 
