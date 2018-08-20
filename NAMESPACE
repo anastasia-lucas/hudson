@@ -3,3 +3,5 @@
 export(emirror)
 export(gmirror)
 export(phemirror)
+export(qqmirror)
+import(ggplot2)
