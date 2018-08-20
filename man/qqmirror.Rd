@@ -6,9 +6,9 @@
 \usage{
 qqmirror(top, bottom, CI = 0.95, opacity = 1, groupcolors,
   splittop = NULL, splitbottom = NULL, highlight_p, highlight_name,
-  annotate_p, annotate_name, highlighter = "red", tline, bline, background,
-  toptitle = NULL, bottomtitle = NULL, file = "qqmirror", wi = 6,
-  hgt = 12, hgtratio = 0.5, res = 300)
+  annotate_p, annotate_name, highlighter = "red", freey = FALSE, tline,
+  bline, background, toptitle = NULL, bottomtitle = NULL,
+  file = "qqmirror", wi = 6, hgt = 12, hgtratio = 0.5, res = 300)
 }
 \arguments{
 \item{top}{dataframe with at least one column, p-value; Color, Shape, and Name optional}
@@ -34,6 +34,8 @@ qqmirror(top, bottom, CI = 0.95, opacity = 1, groupcolors,
 \item{annotate_name}{list of names to annotate, dataframe must include a Name column}
 
 \item{highlighter}{highlighter color}
+
+\item{freey}{allow y-axes to scale with data}
 
 \item{background}{can change to "white"}
 
