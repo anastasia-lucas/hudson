@@ -9,12 +9,12 @@
 #' @param opacity point opacity, default 1
 #' @param toptitle title for top plot
 #' @param bottomtitle title for bottom plot
-#' @param groupcolors named list of colors corresponding to data in Group column
-#' @param highlight_name list of names to highlight, dataframe must include a Name column
+#' @param groupcolors named vector of colors corresponding to data in Group column
+#' @param highlight_name vector of names to highlight, dataframe must include a Name column
 #' @param highlight_p p-value threshold to highlight
 #' @param highlighter highlighter color
 #' @param freey allow y-axes to scale with data
-#' @param annotate_name list of names to annotate, dataframe must include a Name column
+#' @param annotate_name vector of names to annotate, dataframe must include a Name column
 #' @param annotate_p p-value threshold to annotate, dataframe must include a Name column
 #' @param line draw a red line at pvalue threshold (observed)
 #' @param background can change to "white"

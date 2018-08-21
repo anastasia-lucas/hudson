@@ -15,17 +15,17 @@ qqunif(d, CI = 0.95, opacity = 1, groupcolors, splitby = NULL,
 
 \item{opacity}{point opacity, default 1}
 
-\item{groupcolors}{named list of colors corresponding to data in Group column}
+\item{groupcolors}{named vector of colors corresponding to data in Group column}
 
 \item{splitby}{if data contains Color and/or Shape, indicate variable(s) by which the data should be subsetted for calculating CIs}
 
 \item{highlight_p}{p-value threshold to highlight}
 
-\item{highlight_name}{list of names to highlight, dataframe must include a Name column}
+\item{highlight_name}{vector of names to highlight, dataframe must include a Name column}
 
 \item{annotate_p}{p-value threshold to annotate, dataframe must include a Name column}
 
-\item{annotate_name}{list of names to annotate, dataframe must include a Name column}
+\item{annotate_name}{vector of names to annotate, dataframe must include a Name column}
 
 \item{highlighter}{highlighter color}
 

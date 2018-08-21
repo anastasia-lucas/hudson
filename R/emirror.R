@@ -1,7 +1,6 @@
 #' emirror
 #'
 #' Create mirrored Manhattan plots for EWAS
-#' Note: There is an issue with dev.off() if using RStudio
 #' Dependencies: ggplot2, gridExtra
 #' Suggested: RColorBrewer, ggrepel
 #' @param top data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional
@@ -15,12 +14,12 @@
 #' @param bottomtitle optional string for plot title
 #' @param color1 first alternating color
 #' @param color2 second alternating color
-#' @param annotate_var list of variables to annotate
+#' @param annotate_var vector of variables to annotate
 #' @param annotate_p pvalue threshold to annotate
-#' @param highlight_var list of variables to highlight
+#' @param highlight_var vector of variables to highlight
 #' @param highlight_p pvalue threshold to highlight
 #' @param highlighter color to highlight
-#' @param groupcolors named list of colors where names correspond to data in 'Color' column
+#' @param groupcolors named vector of colors where names correspond to data in 'Color' column
 #' @param rotatelabel boolean, rotate axis labels?
 #' @param labelangle angle to rotate
 #' @param freey allow y-axes to scale with data

@@ -30,11 +30,11 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{bottomtitle}{optional string for plot title}
 
-\item{annotate_var}{list of variables to annotate}
+\item{annotate_var}{vector of variables to annotate}
 
 \item{annotate_p}{pvalue threshold to annotate}
 
-\item{highlight_var}{list of variables to highlight}
+\item{highlight_var}{vector of variables to highlight}
 
 \item{highlight_p}{pvalue threshold to highlight}
 
@@ -44,7 +44,7 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{color2}{second alternating color}
 
-\item{groupcolors}{named list of colors where names correspond to data in 'Color' column}
+\item{groupcolors}{named vector of colors where names correspond to data in 'Color' column}
 
 \item{labelangle}{angle to rotate}
 
@@ -71,7 +71,6 @@ png image(s)
 }
 \description{
 Create mirrored Manhattan plots for EWAS
-Note: There is an issue with dev.off() if using RStudio
 Dependencies: ggplot2, gridExtra
 Suggested: RColorBrewer, ggrepel
 }

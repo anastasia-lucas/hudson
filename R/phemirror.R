@@ -11,16 +11,16 @@
 #' @param log10 plot -log10() of pvalue column, boolean
 #' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0-1, useful for dense plots
-#' @param annotate_snp list of RSIDs to annotate
+#' @param annotate_snp vector of RSIDs to annotate
 #' @param annotate_p pvalue threshold to annotate
 #' @param toptitle optional string for top plot title
 #' @param bottomtitle optional string for bottom plot title
 #' @param chrcolor1 first alternating color for chromosome
 #' @param chrcolor2 second alternating color for chromosome
-#' @param highlight_snp list of snps to highlight
+#' @param highlight_snp vector of snps to highlight
 #' @param highlight_p pvalue threshold to highlight
 #' @param highlighter color to highlight
-#' @param groupcolors named list of colors where names correspond to data in 'PHE' or 'Group' column
+#' @param groupcolors named vector of colors where names correspond to data in 'PHE' or 'Group' column
 #' @param freey allow y-axes to scale with the data
 #' @param background variegated or white
 #' @param chrblocks boolean, turns on x-axis chromosome marker blocks

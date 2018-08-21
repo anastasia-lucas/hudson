@@ -28,11 +28,11 @@ phemirror(top, bottom, phegroup, tline, bline, log10 = TRUE, yaxis,
 
 \item{opacity}{opacity of points, from 0-1, useful for dense plots}
 
-\item{annotate_snp}{list of RSIDs to annotate}
+\item{annotate_snp}{vector of RSIDs to annotate}
 
 \item{annotate_p}{pvalue threshold to annotate}
 
-\item{highlight_snp}{list of snps to highlight}
+\item{highlight_snp}{vector of snps to highlight}
 
 \item{highlight_p}{pvalue threshold to highlight}
 
@@ -46,7 +46,7 @@ phemirror(top, bottom, phegroup, tline, bline, log10 = TRUE, yaxis,
 
 \item{chrcolor2}{second alternating color for chromosome}
 
-\item{groupcolors}{named list of colors where names correspond to data in 'PHE' or 'Group' column}
+\item{groupcolors}{named vector of colors where names correspond to data in 'PHE' or 'Group' column}
 
 \item{freey}{allow y-axes to scale with the data}
 

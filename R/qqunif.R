@@ -6,11 +6,11 @@
 #' @param splitby if data contains Color and/or Shape, indicate variable(s) by which the data should be subsetted for calculating CIs
 #' @param opacity point opacity, default 1
 #' @param title plot title
-#' @param groupcolors named list of colors corresponding to data in Group column
-#' @param highlight_name list of names to highlight, dataframe must include a Name column
+#' @param groupcolors named vector of colors corresponding to data in Group column
+#' @param highlight_name vector of names to highlight, dataframe must include a Name column
 #' @param highlight_p p-value threshold to highlight
 #' @param highlighter highlighter color
-#' @param annotate_name list of names to annotate, dataframe must include a Name column
+#' @param annotate_name vector of names to annotate, dataframe must include a Name column
 #' @param annotate_p p-value threshold to annotate, dataframe must include a Name column
 #' @param line draw a red line at pvalue threshold (observed)
 #' @param slope abline slope

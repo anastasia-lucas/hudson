@@ -26,7 +26,7 @@ gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{opacity}{opacity of points, from 0 to 1, useful for dense plots}
 
-\item{annotate_snp}{list of RSIDs to annotate}
+\item{annotate_snp}{vector of RSIDs to annotate}
 
 \item{annotate_p}{pvalue threshold to annotate}
 
@@ -34,7 +34,7 @@ gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{bottomtitle}{optional string for bottom plot title}
 
-\item{highlight_snp}{list of snps to highlight}
+\item{highlight_snp}{vector of snps to highlight}
 
 \item{highlight_p}{pvalue threshold to highlight}
 
