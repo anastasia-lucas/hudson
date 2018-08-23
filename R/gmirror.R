@@ -72,7 +72,7 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
   names(lims) <- c("Color", "snpx", "px", "posx", "posmin", "snpy", "py", "posy", "posmax")
   lims$av <- (lims$posmin + lims$posmax)/2
   lims <- lims[order(lims$Color),]
-  lims$shademap <- rep(c("shade_ffffff", "shade_ebebeb"), each=1)
+  lims$shademap <- rep(c("shade_ffffff", "shade_ebebeb"), length.out=nrow(lims), each=1)
 
   #Set up colors
   nchrcolors <- nlevels(factor(lims$Color))
