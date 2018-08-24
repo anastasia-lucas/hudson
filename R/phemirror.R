@@ -239,9 +239,12 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
   p2 <- p2 + ylab(yaxislab2)
 
   if(chrblocks==TRUE){
-    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(yaxismin1,yaxismax1))
-    p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
-    
+    if(freey==TRUE){
+      print("Sorry, drawing chrblocks with freey=TRUE is currently unsupported and will be ignored.")
+    } else {
+      p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(yaxismin1,yaxismax1))
+      p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    }
   } else {
     p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expand_scale(mult=c(0,0.1)))
     p2 <- p2+scale_y_reverse(limits=c(yaxismax2,yaxismin2), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())

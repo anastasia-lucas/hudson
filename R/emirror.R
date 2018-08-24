@@ -56,7 +56,7 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     top$Shape <- NA
     relhgts <- c(5/11, 6/11)
   } else {
-    relhgts <- relhgts
+    relhgts <- hgtratio
   }
   d <- rbind(top, bottom)
 
@@ -192,7 +192,11 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     }
     p1 <- p1 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
     if(grpblocks==TRUE){
-      p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+      if(freey==TRUE){
+        print("Sorry, drawing grpblocks with freey=TRUE is currently unsupported and will be ignored.")
+      } else {
+        p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+      }
     }
     p1 <- p1 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
 
