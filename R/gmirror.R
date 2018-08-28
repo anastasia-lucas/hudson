@@ -47,15 +47,6 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
   bottomn <- names(bottom)
   top$Location <- "Top"
   bottom$Location <- "Bottom"
-  if("Shape" %in% colnames(top) & !("Shape" %in% colnames(bottom))){
-    bottom$Shape <- NA
-    relhgts <- c(6/11, 5/11)
-  } else if("Shape" %in% colnames(bottom) & !("Shape" %in% colnames((top)))){
-      top$Shape <- NA
-      relhgts <- c(5/11, 6/11)
-  } else {
-    relhgts <- c(1/2, 1/2)
-  }
   d <- rbind(top, bottom)
   d$POS <- as.numeric(as.character(d$POS))
   d$CHR <- factor(d$CHR, levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y"))

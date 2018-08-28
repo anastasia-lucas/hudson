@@ -49,15 +49,6 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
   bottomn <- names(bottom)
   top$Location <- "Top"
   bottom$Location <- "Bottom"
-  if("Shape" %in% colnames(top) & !("Shape" %in% colnames(bottom))){
-    bottom$Shape <- NA
-    relhgts <- c(6/11, 5/11)
-  } else if("Shape" %in% colnames(bottom) & !("Shape" %in% colnames((top)))){
-    top$Shape <- NA
-    relhgts <- c(5/11, 6/11)
-  } else {
-    relhgts <- hgtratio
-  }
   d <- rbind(top, bottom)
 
   #Info for y-axis
