@@ -46,6 +46,8 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{groupcolors}{named vector of colors where names correspond to data in 'Color' column}
 
+\item{rotatelabels}{boolean, rotate axis labels?}
+
 \item{labelangle}{angle to rotate}
 
 \item{freey}{allow y-axes to scale with data}
@@ -63,11 +65,9 @@ emirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 \item{wi}{width of plot in inches}
 
 \item{res}{resolution of plot in pixels per inch}
-
-\item{rotatelabel}{boolean, rotate axis labels?}
 }
 \value{
-png image(s)
+png image
 }
 \description{
 Create mirrored Manhattan plots for EWAS

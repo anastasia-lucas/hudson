@@ -30,6 +30,7 @@
 #' @param wi width of plot in inches
 #' @param res resolution of plot in pixels per inch
 #' @return png image
+#' @import ggplot2
 #' @export
 #' @examples
 #' data(phewas.t)

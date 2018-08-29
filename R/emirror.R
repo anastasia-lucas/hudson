@@ -20,7 +20,7 @@
 #' @param highlight_p pvalue threshold to highlight
 #' @param highlighter color to highlight
 #' @param groupcolors named vector of colors where names correspond to data in 'Color' column
-#' @param rotatelabel boolean, rotate axis labels?
+#' @param rotatelabels boolean, rotate axis labels?
 #' @param labelangle angle to rotate
 #' @param freey allow y-axes to scale with data
 #' @param background variegated or white
@@ -30,7 +30,8 @@
 #' @param hgt height of plot in inches
 #' @param wi width of plot in inches
 #' @param res resolution of plot in pixels per inch
-#' @return png image(s)
+#' @return png image
+#' @import ggplot2
 #' @export
 #' @examples
 #' data(ewas.t)
