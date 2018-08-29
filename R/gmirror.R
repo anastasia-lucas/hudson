@@ -38,13 +38,7 @@
 #' highlight_p = 0.05/nrow(gwas.t), highlighter="green")
 
 gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, background="variegated", chrblocks=FALSE, file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
-  if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
-    stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
-  } else {
-    require("ggplot2", quietly = TRUE)
-    require("gridExtra", quietly = TRUE)
-  }
-
+  
   #Sort data
   topn <- names(top)
   bottomn <- names(bottom)

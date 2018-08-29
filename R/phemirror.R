@@ -39,12 +39,6 @@
 #' toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
 
 phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, freey=FALSE, background="variegated", chrblocks=TRUE, file="phemirror", hgtratio=0.5, hgt=7, wi=12, res=300 ){
-  if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {
-    stop("Please install ggplot2 and gridExtra to create visualization.", call. = FALSE)
-  } else {
-    require("ggplot2", quietly = TRUE)
-    require("gridExtra", quietly = TRUE)
-  }
 
   #Sort data
   topn <- names(top)
