@@ -75,5 +75,6 @@ Suggested: ggrepel
 \examples{
 data(phewas.t)
 data(phewas.b)
-phemirror(top=phewas.t, bottom = phewas.b, toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
+phemirror(top=phewas.t, bottom = phewas.b, 
+toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
 }

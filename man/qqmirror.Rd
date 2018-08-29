@@ -63,6 +63,8 @@ Create qqplots with an assumed uniform distribution
 }
 \examples{
 data(gwas.t)
-qqdat <- data.frame(pvalue=gwas.t$pvalue, Color=rep(c("Additive", "Dominant", "Recessive"), length.out=nrow(gwas.t), each=1))
-qqmirror(top=qqdat, bottom=qqdat, opacity=0.6, splittop="Color", splitbottom="Color", toptitle="Example: Top", bottomtitle="Example: Bottom")
+qqdat <- data.frame(pvalue=gwas.t$pvalue, Color=rep(c("Additive", "Dominant", "Recessive"), 
+length.out=nrow(gwas.t), each=1))
+qqmirror(top=qqdat, bottom=qqdat, opacity=0.6, splittop="Color", splitbottom="Color", 
+toptitle="Example: Top", bottomtitle="Example: Bottom")
 }

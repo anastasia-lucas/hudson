@@ -77,5 +77,7 @@ Suggested: RColorBrewer, ggrepel
 \examples{
 data(ewas.t)
 data(ewas.b)
-emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, highlight_p=0.0001, highlighter="green", toptitle = "EWAS Comparison Example: Data 1", bottomtitle = "EWAS Comparison Example: Data 2")
+emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, 
+highlight_p=0.0001, highlighter="green", toptitle = "EWAS Comparison Example: Data 1", 
+bottomtitle = "EWAS Comparison Example: Data 2")
 }

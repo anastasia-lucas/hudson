@@ -71,5 +71,7 @@ Suggested: RColorBrewer, ggrepel
 \examples{
 data(gwas.t)
 data(gwas.b)
-gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", highlight_p = 0.05/nrow(gwas.t), highlighter="green")
+gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
+toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
+highlight_p = 0.05/nrow(gwas.t), highlighter="green")
 }

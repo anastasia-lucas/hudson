@@ -35,7 +35,8 @@
 #' @examples
 #' data(phewas.t)
 #' data(phewas.b)
-#' phemirror(top=phewas.t, bottom = phewas.b, toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
+#' phemirror(top=phewas.t, bottom = phewas.b, 
+#' toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
 
 phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, freey=FALSE, background="variegated", chrblocks=TRUE, file="phemirror", hgtratio=0.5, hgt=7, wi=12, res=300 ){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {

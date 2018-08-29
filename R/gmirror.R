@@ -33,7 +33,9 @@
 #' @examples
 #' data(gwas.t)
 #' data(gwas.b)
-#' gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", highlight_p = 0.05/nrow(gwas.t), highlighter="green")
+#' gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
+#' toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
+#' highlight_p = 0.05/nrow(gwas.t), highlighter="green")
 
 gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, background="variegated", chrblocks=FALSE, file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
   if (!requireNamespace(c("ggplot2"), quietly = TRUE)==TRUE | !requireNamespace(c("gridExtra"), quietly = TRUE)==TRUE) {

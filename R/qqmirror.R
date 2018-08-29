@@ -28,8 +28,10 @@
 #' @export
 #' @examples
 #' data(gwas.t)
-#' qqdat <- data.frame(pvalue=gwas.t$pvalue, Color=rep(c("Additive", "Dominant", "Recessive"), length.out=nrow(gwas.t), each=1))
-#' qqmirror(top=qqdat, bottom=qqdat, opacity=0.6, splittop="Color", splitbottom="Color", toptitle="Example: Top", bottomtitle="Example: Bottom")
+#' qqdat <- data.frame(pvalue=gwas.t$pvalue, Color=rep(c("Additive", "Dominant", "Recessive"), 
+#' length.out=nrow(gwas.t), each=1))
+#' qqmirror(top=qqdat, bottom=qqdat, opacity=0.6, splittop="Color", splitbottom="Color", 
+#' toptitle="Example: Top", bottomtitle="Example: Bottom")
 
 qqmirror <- function(top, bottom, CI=0.95, opacity=1, groupcolors, splittop=NULL, splitbottom=NULL, highlight_p, highlight_name, annotate_p, annotate_name, highlighter="red", freey=FALSE, tline, bline, background, toptitle=NULL, bottomtitle=NULL, file="qqmirror", wi=6, hgt=8, hgtratio=0.5, res=300){
 
