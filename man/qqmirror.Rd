@@ -37,6 +37,10 @@ qqmirror(top, bottom, CI = 0.95, opacity = 1, groupcolors,
 
 \item{freey}{allow y-axes to scale with data}
 
+\item{tline}{draw a red line at (observed) pvalue threshold in top plot}
+
+\item{bline}{draw a red line at (observed) pvalue threshold in bottom plot}
+
 \item{background}{can change to "white"}
 
 \item{toptitle}{title for top plot}
@@ -52,8 +56,6 @@ qqmirror(top, bottom, CI = 0.95, opacity = 1, groupcolors,
 \item{hgtratio}{height ratio for plots}
 
 \item{res}{resolution of plot}
-
-\item{line}{draw a red line at pvalue threshold (observed)}
 }
 \value{
 png image

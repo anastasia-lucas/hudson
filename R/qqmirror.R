@@ -16,7 +16,8 @@
 #' @param freey allow y-axes to scale with data
 #' @param annotate_name vector of names to annotate, dataframe must include a Name column
 #' @param annotate_p p-value threshold to annotate, dataframe must include a Name column
-#' @param line draw a red line at pvalue threshold (observed)
+#' @param tline draw a red line at (observed) pvalue threshold in top plot
+#' @param bline draw a red line at (observed) pvalue threshold in bottom plot 
 #' @param background can change to "white"
 #' @param file filename
 #' @param wi width of plot
