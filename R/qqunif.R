@@ -17,10 +17,6 @@
 #' @param background can change to "white"
 #' @return ggplot object
 #' @import ggplot2
-#' @examples
-#' data(gwas)
-#' qqdat <- data.frame(pvalue=gwas$pvalue, Color=gwas$Frame)
-#' qqunif(d=qqdat, opacity=0.6, splitby="Color")
 
 qqunif <- function(d, CI=0.95, opacity=1, groupcolors, splitby=NULL, highlight_p, highlight_name, annotate_p, annotate_name, highlighter="red", line, slope=1, background, title){
   if("Color" %in% colnames(d)){

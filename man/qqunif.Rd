@@ -43,8 +43,3 @@ ggplot object
 \description{
 Create qqplots with an assumed uniform distribution
 }
-\examples{
-data(gwas)
-qqdat <- data.frame(pvalue=gwas$pvalue, Color=gwas$Frame)
-qqunif(d=qqdat, opacity=0.6, splitby="Color")
-}
