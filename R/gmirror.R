@@ -29,6 +29,7 @@
 #' @param res resolution of plot in pixels per inch
 #' @return png image
 #' @import ggplot2
+#' @importFrom gridExtra arrangeGrob grid.arrange
 #' @export
 #' @examples
 #' data(gwas.t)

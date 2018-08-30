@@ -26,6 +26,7 @@
 #' @param res resolution of plot
 #' @return png image
 #' @import ggplot2
+#' @importFrom gridExtra arrangeGrob grid.arrange
 #' @export
 #' @examples
 #' data(gwas.t)

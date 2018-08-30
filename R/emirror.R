@@ -32,6 +32,7 @@
 #' @param res resolution of plot in pixels per inch
 #' @return png image
 #' @import ggplot2
+#' @importFrom gridExtra arrangeGrob grid.arrange
 #' @export
 #' @examples
 #' data(ewas.t)
@@ -127,17 +128,16 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
         topcols <- c(dcols, groupcolors)
         bottomcols <- c(dcols, groupcolors)
       } else {
-        if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
-          stop("Please install RColorBrewer to add color attribute.", call. = FALSE)
-        } else {
-          require("RColorBrewer", quietly=TRUE)
-        }
         
         #Top Colors
         ngroupcolors <- nlevels(factor(d$Color[d$Location=="Top"]))
         if(ngroupcolors > 15){
-          getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
-          topcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+          if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
+            stop("Please install RColorBrewer to add color attribute for more than 15 colors.", call. = FALSE)
+          } else {
+            getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
+            topcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+          }
         } else {
           pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
                           "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
@@ -148,8 +148,12 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
         #Bottom Colors
         ngroupcolors <- nlevels(factor(d$Color[d$Location=="Bottom"]))
         if(ngroupcolors > 15){
-          getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
-          bottomcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+          if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
+            stop("Please install RColorBrewer to add color attribute for more than 15 colors.", call. = FALSE)
+          } else {
+            getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
+            bottomcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+          }
         } else {
           pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
                           "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 

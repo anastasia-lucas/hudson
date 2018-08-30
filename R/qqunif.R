@@ -25,8 +25,12 @@ qqunif <- function(d, CI=0.95, opacity=1, groupcolors, splitby=NULL, highlight_p
     } else {
       ngroupcolors <- nlevels(factor(d$Color))
       if(ngroupcolors > 15){
-        getPalette = colorRampPalette(brewer.pal(11, "Spectral"))
-        colrs<- getPalette(ngroupcolors)
+        if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
+          stop("Please install RColorBrewer to add color attributes for more than 15 colors.", call. = FALSE)
+        } else {
+          getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
+          colrs<- getPalette(ngroupcolors)
+        }
       } else {
         pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24",
                         "#ffff6d", "#000000", "#006ddb", "#004949","#924900",
@@ -39,16 +43,16 @@ qqunif <- function(d, CI=0.95, opacity=1, groupcolors, splitby=NULL, highlight_p
     dlist <- split(d, d[, splitby])
     df <- lapply(dlist, function(x) cbind(x[order(x$pvalue),],
                                           obs=-log10(sort(x$pvalue)),
-                                          ex=-log10(ppoints(length(!is.na(x$pvalue)))),
-                                          cl=-log10(qbeta(p = (1-CI)/2, shape1 = 1:length(!is.na(x$pvalue)), shape2 = length(!is.na(x$pvalue)):1)),
-                                          cu=-log10(qbeta(p = (1+CI)/2, shape1 = 1:length(!is.na(x$pvalue)), shape2 = length(!is.na(x$pvalue)):1))))
+                                          ex=-log10(stats::ppoints(length(!is.na(x$pvalue)))),
+                                          cl=-log10(stats::qbeta(p = (1-CI)/2, shape1 = 1:length(!is.na(x$pvalue)), shape2 = length(!is.na(x$pvalue)):1)),
+                                          cu=-log10(stats::qbeta(p = (1+CI)/2, shape1 = 1:length(!is.na(x$pvalue)), shape2 = length(!is.na(x$pvalue)):1))))
     dat <- do.call("rbind", df)
   } else {
     dat <- cbind(d[order(d$pvalue), , drop=FALSE],
                  obs=-log10(sort(d$pvalue)),
-                 ex=-log10(ppoints(length(!is.na(d$pvalue)))),
-                 cl=-log10(qbeta(p = (1-CI)/2, shape1 = 1:length(!is.na(d$pvalue)), shape2 = length(!is.na(d$pvalue)):1)),
-                 cu=-log10(qbeta(p = (1+CI)/2, shape1 = 1:length(!is.na(d$pvalue)), shape2 = length(!is.na(d$pvalue)):1)))
+                 ex=-log10(stats::ppoints(length(!is.na(d$pvalue)))),
+                 cl=-log10(stats::qbeta(p = (1-CI)/2, shape1 = 1:length(!is.na(d$pvalue)), shape2 = length(!is.na(d$pvalue)):1)),
+                 cu=-log10(stats::qbeta(p = (1+CI)/2, shape1 = 1:length(!is.na(d$pvalue)), shape2 = length(!is.na(d$pvalue)):1)))
   }
   
   if("Shape" %in% splitby & "Color" %in% splitby){
