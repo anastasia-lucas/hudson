@@ -9,7 +9,7 @@ As of now, there is only a development version of the package which can be insta
 
 ```devtools::install_github('anastasia-lucas/hudson')```
 
-This package uses ggplot2, gridExtra, and RColorBrewer. ggrepel is suggested for improved text annotation, but not required.
+This package uses ggplot2 and gridExtra. ggrepel is suggested for improved text annotation, but not required. The default color palette contains 15 colors; if additional colors are required, RColorBrewer can be used to create an expanded palette. 
 
 ## Usage
 
