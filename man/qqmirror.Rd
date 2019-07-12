@@ -25,13 +25,13 @@ qqmirror(top, bottom, CI = 0.95, opacity = 1, groupcolors,
 
 \item{splitbottom}{if data contains Color and/or Shape, indicate variable(s) by which the data should be subsetted for calculating CIs}
 
-\item{highlight_p}{p-value threshold to highlight}
+\item{highlight_p}{list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)}
 
 \item{highlight_name}{vector of names to highlight, dataframe must include a Name column}
 
-\item{annotate_p}{p-value threshold to annotate, dataframe must include a Name column}
+\item{annotate_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
 
-\item{annotate_name}{vector of names to annotate, dataframe must include a Name column}
+\item{annotate_name}{vector of names to annotate, dataframe must include a Name column to use this option}
 
 \item{highlighter}{highlighter color}
 

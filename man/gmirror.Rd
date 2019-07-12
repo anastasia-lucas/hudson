@@ -28,7 +28,7 @@ gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{annotate_snp}{vector of RSIDs to annotate}
 
-\item{annotate_p}{pvalue threshold to annotate}
+\item{annotate_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
 
 \item{toptitle}{optional string for top plot title}
 
@@ -36,7 +36,7 @@ gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
 
 \item{highlight_snp}{vector of snps to highlight}
 
-\item{highlight_p}{pvalue threshold to highlight}
+\item{highlight_p}{list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)}
 
 \item{highlighter}{color to highlight}
 

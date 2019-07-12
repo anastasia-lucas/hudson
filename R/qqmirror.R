@@ -11,11 +11,11 @@
 #' @param bottomtitle title for bottom plot
 #' @param groupcolors named vector of colors corresponding to data in Group column
 #' @param highlight_name vector of names to highlight, dataframe must include a Name column
-#' @param highlight_p p-value threshold to highlight
+#' @param highlight_p list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)
 #' @param highlighter highlighter color
 #' @param freey allow y-axes to scale with data
-#' @param annotate_name vector of names to annotate, dataframe must include a Name column
-#' @param annotate_p p-value threshold to annotate, dataframe must include a Name column
+#' @param annotate_name vector of names to annotate, dataframe must include a Name column to use this option
+#' @param annotate_p list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)
 #' @param tline draw a red line at (observed) pvalue threshold in top plot
 #' @param bline draw a red line at (observed) pvalue threshold in bottom plot 
 #' @param background can change to "white"
@@ -40,9 +40,9 @@ qqmirror <- function(top, bottom, CI=0.95, opacity=1, groupcolors, splittop=NULL
   arglist <- list(d=top, CI=CI, opacity=opacity, splitby=splittop, highlighter=highlighter)
   if(!missing(tline)){arglist <- c(arglist, line=tline)}
   if(!missing(groupcolors)){arglist <- c(arglist, groupcolors=groupcolors)}
-  if(!missing(highlight_p)){arglist <- c(arglist, highlight_p=highlight_p)}
+  if(!missing(highlight_p)){arglist <- c(arglist, highlight_p=highlight_p[2])}
   if(!missing(highlight_name)){arglist <- c(arglist, highlight_name=highlight_name)}
-  if(!missing(annotate_p)){arglist <- c(arglist, annotate_p=annotate_p)}
+  if(!missing(annotate_p)){arglist <- c(arglist, annotate_p=annotate_p[1])}
   if(!missing(annotate_name)){arglist <- c(arglist, annotate_name=annotate_name)}
   if(!missing(background)){arglist <- c(arglist, background=background)}
   p1 <- do.call(qqunif, arglist)
@@ -52,9 +52,9 @@ qqmirror <- function(top, bottom, CI=0.95, opacity=1, groupcolors, splittop=NULL
   arglist <- list(d=bottom, CI=CI, opacity=opacity, splitby=splitbottom, highlighter=highlighter, slope=-1)
   if(!missing(bline)){arglist <- c(arglist, line=bline)}
   if(!missing(groupcolors)){arglist <- c(arglist, groupcolors=groupcolors)}
-  if(!missing(highlight_p)){arglist <- c(arglist, highlight_p=highlight_p)}
+  if(!missing(highlight_p)){arglist <- c(arglist, highlight_p=highlight_p[2])}
   if(!missing(highlight_name)){arglist <- c(arglist, highlight_name=highlight_name)}
-  if(!missing(annotate_p)){arglist <- c(arglist, annotate_p=annotate_p)}
+  if(!missing(annotate_p)){arglist <- c(arglist, annotate_p=annotate_p[2])}
   if(!missing(annotate_name)){arglist <- c(arglist, annotate_name=annotate_name)}
   if(!missing(background)){arglist <- c(arglist, background=background)}
   p2 <- do.call(qqunif, arglist)

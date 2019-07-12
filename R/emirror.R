@@ -15,9 +15,9 @@
 #' @param color1 first alternating color
 #' @param color2 second alternating color
 #' @param annotate_var vector of variables to annotate
-#' @param annotate_p pvalue threshold to annotate
+#' @param annotate_p list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)
 #' @param highlight_var vector of variables to highlight
-#' @param highlight_p pvalue threshold to highlight
+#' @param highlight_p list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)
 #' @param highlighter color to highlight
 #' @param groupcolors named vector of colors where names correspond to data in 'Color' column
 #' @param rotatelabels boolean, rotate axis labels?
@@ -233,16 +233,16 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
   }
   if(!missing(highlight_p)){
     if("Shape" %in% topn){
-      p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Top", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
+      p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p[1] & d_order$Location=="Top", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
       p1 <- p1 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
-      p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Top", ], aes(x=pos_index, y=pval), colour=highlighter)
+      p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p[1] & d_order$Location=="Top", ], aes(x=pos_index, y=pval), colour=highlighter)
     }
     if("Shape" %in% bottomn){
-      p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
+      p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p[2] & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
       p2 <- p2 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
-      p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval), colour=highlighter)
+      p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p[2] & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval), colour=highlighter)
     }
   }
   #Add pvalue threshold line
@@ -256,11 +256,11 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
   if(!missing(annotate_p)){
     if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
       print("Consider installing 'ggrepel' for improved text annotation")
-      p1 <- p1 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
-      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
+      p1 <- p1 + geom_text(data=d_order[d_order$pvalue < annotate_p[1] & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
+      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p[2] & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
     } else {
-      p1 <- p1 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
-      p2 <- p2 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
+      p1 <- p1 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p[1] & d_order$Location=="Top",], aes(pos_index,pval,label=Variable))
+      p2 <- p2 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p[2] & d_order$Location=="Bottom",], aes(pos_index,pval,label=Variable))
     }
   }
   if(!missing(annotate_var)){

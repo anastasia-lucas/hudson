@@ -11,13 +11,13 @@
 #' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0 to 1, useful for dense plots
 #' @param annotate_snp vector of RSIDs to annotate
-#' @param annotate_p pvalue threshold to annotate
+#' @param annotate_p list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)
 #' @param toptitle optional string for top plot title
 #' @param bottomtitle optional string for bottom plot title
 #' @param chrcolor1 first alternating color for chromosome
 #' @param chrcolor2 second alternating color for chromosome
 #' @param highlight_snp vector of snps to highlight
-#' @param highlight_p pvalue threshold to highlight
+#' @param highlight_p list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)
 #' @param highlighter color to highlight
 #' @param freey allow y-axes to scale with the data
 #' @param background variegated or white
@@ -142,16 +142,16 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
   }
   if(!missing(highlight_p)){
     if("Shape" %in% topn){
-      p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Top", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
+      p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p[1] & d_order$Location=="Top", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
       p1 <- p1 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
-      p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Top", ], aes(x=pos_index, y=pval), colour=highlighter)
+      p1 <- p1 + geom_point(data=d_order[d_order$pvalue < highlight_p[1] & d_order$Location=="Top", ], aes(x=pos_index, y=pval), colour=highlighter)
     }
     if("Shape" %in% bottomn){
-      p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
+      p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p[2] & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter)
       p2 <- p2 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
-      p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval), colour=highlighter)
+      p2 <- p2 + geom_point(data=d_order[d_order$pvalue < highlight_p[2] & d_order$Location=="Bottom", ], aes(x=pos_index, y=pval), colour=highlighter)
     }
   }
   #Add pvalue threshold line
@@ -165,11 +165,11 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
   if(!missing(annotate_p)){
     if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
       print("Consider installing 'ggrepel' for improved text annotation")
-      p1 <- p1 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Top",], aes(pos_index,pval,label=SNP))
-      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+      p1 <- p1 + geom_text(data=d_order[d_order$pvalue < annotate_p[1] & d_order$Location=="Top",], aes(pos_index,pval,label=SNP))
+      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p[2] & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
     } else {
-      p1 <- p1 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Top",], aes(pos_index,pval,label=SNP))
-      p2 <- p2 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+      p1 <- p1 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p[1] & d_order$Location=="Top",], aes(pos_index,pval,label=SNP))
+      p2 <- p2 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p[2] & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
     }
   }
   if(!missing(annotate_snp)){
