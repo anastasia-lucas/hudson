@@ -54,3 +54,16 @@ toptitle = "EWAS Comparison Example: Data 1", bottomtitle = "EWAS Comparison Exa
 
 Note that for EWAS plots in particular, although you can rotate the axis labels by changing the ```rotatelabel``` and ```labelangle``` parameters, you'll probaby want to keep your "Group" names pretty short if some of your categories don't have a lot of variables in them.
 
+### Create a plot with multiple Manhattan plot using PheWAS data
+```
+#Generate a plot and highlight by p-value threshold
+library(hudson)
+data(phewas.t)
+data(phewas.b)
+phewas.t = phewas.t[phewas.t$PHE != "Pheno1",]
+phemulti(list(phewas.t, phewas.b), 
+plot_titles = c("PheWAS Example: Data 1", "PheWAS Example: Data 2"))
+```
+
+![Imgur](https://i.imgur.com/gOIBp6c.png)
+
