@@ -3,7 +3,7 @@ An R package for creating mirrored Manhattan plots
 
 ## Overview
 
-*I have become aware the legends do not work with the latest version of ggplot2 (3.3.0). Please feel free to e-mail for a temporary fix until I get a chance to push the changes here.*
+*I have become aware the latest version of ggplot2 (3.3.0) causes hidden legends to pop up. Please feel free to e-mail for a temporary fix until I get a chance to push the changes here.*
 
 hudson is an R package for creating mirrored Manhattan plots with a shared x-axis, similar to Figure 4 from Verma et al. shown [here](https://www.cell.com/ajhg/fulltext/S0002-9297(18)30062-4) for position by position comparison of results. The package includes functions to visualize data from genome-wide, phenome-wide, and environment-wide association analyses (GWAS, PheWAS, EWAS, respectively) directly, though they may adaptable for other types of data such as beta or SNP intensity value, or other types of analyses. You can simply specify a dataset for the top and bottom tracks to generate a basic plot, or provide meta information to annotate a more complex plot.
 
