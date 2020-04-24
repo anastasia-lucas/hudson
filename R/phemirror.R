@@ -155,7 +155,7 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
     p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
   }
   #Add legend
-  p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols, guides(alpha=FALSE))
+  p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols)
   p1 <- p1 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
   
   #Start plotting
@@ -172,7 +172,7 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
     p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
   } 
   #Add legend
-  p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols, guides(alpha=FALSE))
+  p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols)
   p2 <- p2 + theme(axis.text.x=element_text(angle=90), panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
  
  #Highlight if given
@@ -244,8 +244,8 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
       p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
     }
   } else {
-    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expand_scale(mult=c(0,0.1)))
-    p2 <- p2+scale_y_reverse(limits=c(yaxismax2,yaxismin2), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expansion(mult=c(0,0.1)))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax2,yaxismin2), expand=expansion(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   }
   
   if(background=="white"){
@@ -253,6 +253,9 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
     p2 <- p2 + theme(panel.background = element_rect(fill="white"))
   }
 
+  p1 <- p1 + guides(fill="none")
+  p2 <- p2 + guides(fill="none")
+  
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio, 1-hgtratio))

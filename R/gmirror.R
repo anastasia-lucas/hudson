@@ -36,7 +36,7 @@
 #' data(gwas.b)
 #' gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
 #' toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
-#' highlight_p = 0.05/nrow(gwas.t), highlighter="green")
+#' highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
 
 gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, background="variegated", chrblocks=FALSE, file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
   
@@ -107,7 +107,7 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
   if(chrblocks==TRUE){
     p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
   }
-  p1 <- p1 + scale_colour_manual(name = "Color", values = newcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = newcols, guides(alpha=FALSE))
+  p1 <- p1 + scale_colour_manual(name = "Color", values = newcols) + scale_fill_manual(name = "Color", values = newcols)
   p1 <- p1 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
 
   #BOTTOM PLOT
@@ -122,7 +122,7 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
   if(chrblocks==TRUE){
     p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
   }  
-  p2 <- p2 + scale_colour_manual(name = "Color", values = newcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = newcols, guides(alpha=FALSE))
+  p2 <- p2 + scale_colour_manual(name = "Color", values = newcols) + scale_fill_manual(name = "Color", values = newcols)
   p2 <- p2 + theme(axis.text.x=element_text(angle=90), panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
 
   #Highlight if given
@@ -195,14 +195,16 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
       p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
     }
   } else {
-    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expand_scale(mult=c(0,0.1)))
-    p2 <- p2+scale_y_reverse(limits=c(yaxismax2,yaxismin2), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expansion(mult=c(0,0.1)))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax2,yaxismin2), expand=expansion(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   }
 
   if(background=="white"){
     p1 <- p1 + theme(panel.background = element_rect(fill="white"))
     p2 <- p2 + theme(panel.background = element_rect(fill="white"))
   }
+  p1 <- p1 + guides(fill="none", color="none")
+  p2 <- p2 + guides(fill="none", color="none")
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio,1-hgtratio))
