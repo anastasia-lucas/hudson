@@ -24,7 +24,7 @@ data(gwas.t)
 data(gwas.b)
 gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
 toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
-highlight_p = 0.05/nrow(gwas.t), highlighter="green")
+highlight_p = c(0.05/nrow(gwas.t),0.05/nrow(gwas.b)), highlighter="green")
 ```
 
 ![Imgur](https://i.imgur.com/FNjIaCM.png)
@@ -49,7 +49,7 @@ bottomtitle = "PheWAS Example: Data 2")
 library(hudson)
 data(ewas.t)
 data(ewas.b)
-emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, highlight_p=0.0001, highlighter="green", 
+emirror(top=ewas.t, bottom=ewas.b, annotate_p = c(0.0001, 0.0001), highlight_p=c(0.0001, 0.0001), highlighter="green", 
 toptitle = "EWAS Comparison Example: Data 1", bottomtitle = "EWAS Comparison Example: Data 2")
 ```
 
