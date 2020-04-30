@@ -37,8 +37,8 @@
 #' @examples
 #' data(ewas.t)
 #' data(ewas.b)
-#' emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, 
-#' highlight_p=0.0001, highlighter="green", toptitle = "EWAS Comparison Example: Data 1", 
+#' emirror(top=ewas.t, bottom=ewas.b, annotate_p = c(0.0001, 0.0005), 
+#' highlight_p=c(0.0001, 0.0005), highlighter="green", toptitle = "EWAS Comparison Example: Data 1", 
 #' bottomtitle = "EWAS Comparison Example: Data 2")
 
 emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p, highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, freey=FALSE, background="variegated", grpblocks=FALSE, file="emirror", hgtratio=0.5, hgt=7, wi=12, res=300){
@@ -208,12 +208,16 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
   #}
   if("Color" %in% names(d)){
     #Add legend
-    p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols, guides(alpha=FALSE))
-    p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols, guides(alpha=FALSE))
+    p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols)
+    p1 <- p1 + guides(fill="none")
+    p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols)
+    p2 <- p2 + guides(fill="none")
   } else {
     #Don't
-    p1 <- p1 + scale_colour_manual(name = "Color", values = topcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = topcols, guides(alpha=FALSE))
-    p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols, guides(alpha=FALSE)) + scale_fill_manual(name = "Color", values = bottomcols, guides(alpha=FALSE))
+    p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols)
+    p1 <- p1 + guides(color="none", fill="none")
+    p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols)
+    p2 <- p2 + guides(color="none", fill="none")
   }
   
   #Highlight if given
@@ -282,8 +286,8 @@ emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, to
     p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(yaxismin1,yaxismax1))
     p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   } else {
-    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expand_scale(mult=c(0,0.1)))
-    p2 <- p2+scale_y_reverse(limits=c(yaxismax1,yaxismin2), expand=expand_scale(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expansion(mult=c(0,0.1)))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax1,yaxismin2), expand=expansion(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   }
   if(background=="white"){
     p1 <- p1 + theme(panel.background = element_rect(fill="white"))

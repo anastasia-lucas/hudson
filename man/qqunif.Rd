@@ -5,8 +5,8 @@
 \title{qqunif}
 \usage{
 qqunif(d, CI = 0.95, opacity = 1, groupcolors, splitby = NULL,
-  highlight_p, highlight_name, annotate_p, annotate_name, highlighter = "red",
-  line, slope = 1, background, title)
+  highlight_p, highlight_name, annotate_p, annotate_name,
+  highlighter = "red", line, slope = 1, background, title)
 }
 \arguments{
 \item{d}{dataframe with at least one column, p-value; Color, Shape, and Name optional}

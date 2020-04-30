@@ -2,6 +2,9 @@
 An R package for creating mirrored Manhattan plots
 
 ## Overview
+
+*This package is now compatible with the latest version of ggplot2 (3.3.0)*
+
 hudson is an R package for creating mirrored Manhattan plots with a shared x-axis, similar to Figure 4 from Verma et al. shown [here](https://www.cell.com/ajhg/fulltext/S0002-9297(18)30062-4) for position by position comparison of results. The package includes functions to visualize data from genome-wide, phenome-wide, and environment-wide association analyses (GWAS, PheWAS, EWAS, respectively) directly, though they may adaptable for other types of data such as beta or SNP intensity value, or other types of analyses. You can simply specify a dataset for the top and bottom tracks to generate a basic plot, or provide meta information to annotate a more complex plot.
 
 ## Installation
@@ -21,7 +24,7 @@ data(gwas.t)
 data(gwas.b)
 gmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
 toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
-highlight_p = 0.05/nrow(gwas.t), highlighter="green")
+highlight_p = c(0.05/nrow(gwas.t),0.05/nrow(gwas.b)), highlighter="green")
 ```
 
 ![Imgur](https://i.imgur.com/FNjIaCM.png)
@@ -46,7 +49,7 @@ bottomtitle = "PheWAS Example: Data 2")
 library(hudson)
 data(ewas.t)
 data(ewas.b)
-emirror(top=ewas.t, bottom=ewas.b, annotate_p = 0.0001, highlight_p=0.0001, highlighter="green", 
+emirror(top=ewas.t, bottom=ewas.b, annotate_p = c(0.0001, 0.0001), highlight_p=c(0.0001, 0.0001), highlighter="green", 
 toptitle = "EWAS Comparison Example: Data 1", bottomtitle = "EWAS Comparison Example: Data 2")
 ```
 
