@@ -4,7 +4,9 @@
 \name{phewas.t}
 \alias{phewas.t}
 \title{Example PheWAS data}
-\format{An object of class data.frame}
+\format{
+An object of class data.frame
+}
 \usage{
 data(phewas.t)
 }

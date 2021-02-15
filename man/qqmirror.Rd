@@ -4,11 +4,31 @@
 \alias{qqmirror}
 \title{qqmirror}
 \usage{
-qqmirror(top, bottom, CI = 0.95, opacity = 1, groupcolors,
-  splittop = NULL, splitbottom = NULL, highlight_p, highlight_name,
-  annotate_p, annotate_name, highlighter = "red", freey = FALSE, tline,
-  bline, background, toptitle = NULL, bottomtitle = NULL,
-  file = "qqmirror", wi = 6, hgt = 8, hgtratio = 0.5, res = 300)
+qqmirror(
+  top,
+  bottom,
+  CI = 0.95,
+  opacity = 1,
+  groupcolors,
+  splittop = NULL,
+  splitbottom = NULL,
+  highlight_p,
+  highlight_name,
+  annotate_p,
+  annotate_name,
+  highlighter = "red",
+  freey = FALSE,
+  tline,
+  bline,
+  background,
+  toptitle = NULL,
+  bottomtitle = NULL,
+  file = "qqmirror",
+  wi = 6,
+  hgt = 8,
+  hgtratio = 0.5,
+  res = 300
+)
 }
 \arguments{
 \item{top}{dataframe with at least one column, p-value; Color, Shape, and Name optional}

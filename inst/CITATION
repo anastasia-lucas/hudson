@@ -1,0 +1,10 @@
+citHeader("To cite hudson in publications, please use:")
+
+citEntry(entry = "Unpublished",
+         author = "Anastasia Lucas",
+         title = "hudson: An R package for creating mirrored Manhattan plots",
+         url = "https://github.com/anastasia-lucas/hudson",
+         textVersion = "Lucas, Anastasia. hudson: An R package for creating mirrored Manhattan plots. R package version 0.1.0.",
+         year = 2020,
+         note = "R package version 0.1.0"
+)

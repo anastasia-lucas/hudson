@@ -4,7 +4,9 @@
 \name{gwas.t}
 \alias{gwas.t}
 \title{Example GWAS data}
-\format{An object of class data.frame}
+\format{
+An object of class data.frame
+}
 \usage{
 data(gwas.t)
 }

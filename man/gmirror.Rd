@@ -4,12 +4,32 @@
 \alias{gmirror}
 \title{gmirror}
 \usage{
-gmirror(top, bottom, tline, bline, log10 = TRUE, yaxis, opacity = 1,
-  annotate_snp, annotate_p, toptitle = NULL, bottomtitle = NULL,
-  highlight_snp, highlight_p, highlighter = "red",
-  chrcolor1 = "#AAAAAA", chrcolor2 = "#4D4D4D", freey = FALSE,
-  background = "variegated", chrblocks = FALSE, file = "gmirror",
-  hgt = 7, hgtratio = 0.5, wi = 12, res = 300)
+gmirror(
+  top,
+  bottom,
+  tline,
+  bline,
+  log10 = TRUE,
+  yaxis,
+  opacity = 1,
+  annotate_snp,
+  annotate_p,
+  toptitle = NULL,
+  bottomtitle = NULL,
+  highlight_snp,
+  highlight_p,
+  highlighter = "red",
+  chrcolor1 = "#AAAAAA",
+  chrcolor2 = "#4D4D4D",
+  freey = FALSE,
+  background = "variegated",
+  chrblocks = FALSE,
+  file = "gmirror",
+  hgt = 7,
+  hgtratio = 0.5,
+  wi = 12,
+  res = 300
+)
 }
 \arguments{
 \item{top}{data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape}

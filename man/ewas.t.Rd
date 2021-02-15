@@ -4,7 +4,9 @@
 \name{ewas.t}
 \alias{ewas.t}
 \title{Example EWAS data}
-\format{An object of class data.frame}
+\format{
+An object of class data.frame
+}
 \usage{
 data(ewas.t)
 }
