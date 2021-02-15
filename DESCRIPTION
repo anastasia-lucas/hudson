@@ -1,6 +1,6 @@
 Package: hudson
 Type: Package
-Title: A Hudson Plot Package
+Title: A mirrored Manhattan plot package
 Version: 0.1.0
 Author: person("Anastasia", "Lucas", email = "anastasia.lucas.bioinfo@gmail.com", role = c("aut", "cre"))
 Maintainer: The package maintainer <anastasia.lucas.bioinfo@gmail.com>
