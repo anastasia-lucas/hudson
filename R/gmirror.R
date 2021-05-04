@@ -5,8 +5,8 @@
 #' Suggested: RColorBrewer, ggrepel
 #' @param top data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape
 #' @param bottom data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape
-#' @param tline optional pvalue threshold to draw red line at in top plot
-#' @param bline optional pvalue threshold to draw red line at in bottom plot
+#' @param tline list of pvalues to draw red threshold lines in top plot
+#' @param bline ist of pvalues to draw red threshold lines in bottom plot
 #' @param log10 plot -log10() of pvalue column, boolean
 #' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0 to 1, useful for dense plots
@@ -38,7 +38,12 @@
 #' toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
 #' highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
 
-gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, background="variegated", chrblocks=FALSE, file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
+gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, 
+                    opacity=1, annotate_snp, annotate_p, toptitle=NULL, 
+                    bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", 
+                    chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, 
+                    background="variegated", chrblocks=FALSE, 
+                    file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
   
   #Sort data
   topn <- names(top)
@@ -156,10 +161,14 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, ann
   }
   #Add pvalue threshold line
   if(!missing(tline)){
-    p1 <- p1 + geom_hline(yintercept = tredline, colour="red")
+    for(i in 1:length(tline)){
+      p1 <- p1 + geom_hline(yintercept = tredline[i], colour="red")
+    }
   }
   if(!missing(bline)){
-    p2 <- p2 + geom_hline(yintercept = bredline, colour="red")
+    for(i in 1:length(bline)){
+      p2 <- p2 + geom_hline(yintercept = bredline[i], colour="red")
+    }
   }
   #Annotate
   if(!missing(annotate_p)){

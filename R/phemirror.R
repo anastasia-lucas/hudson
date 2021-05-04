@@ -6,8 +6,8 @@
 #' @param top data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape
 #' @param bottom data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape
 #' @param phegroup optional grouping file for phenotypes, must contain PHE and Group columns
-#' @param tline optional pvalue threshold to draw red line at in top plot
-#' @param bline optional pvalue threshold to draw red line at in bottom plot
+#' @param tline list of pvalues to draw red threshold lines in top plot
+#' @param bline list of pvalues to draw red threshold lines in bottom plot
 #' @param log10 plot -log10() of pvalue column, boolean
 #' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0-1, useful for dense plots
@@ -206,10 +206,14 @@ phemirror <- function(top, bottom, phegroup, tline, bline, log10=TRUE, yaxis, op
   }
   #Add pvalue threshold line
   if(!missing(tline)){
-    p1 <- p1 + geom_hline(yintercept = tredline, colour="red")
+    for(i in 1:length(tline)){
+      p1 <- p1 + geom_hline(yintercept = tredline[i], colour="red")
+    }
   }
   if(!missing(bline)){
-    p2 <- p2 + geom_hline(yintercept = bredline, colour="red")
+    for(i in 1:length(bline)){
+      p2 <- p2 + geom_hline(yintercept = bredline[i], colour="red")
+    }
   }
   #Annotate
   if(!missing(annotate_p)){

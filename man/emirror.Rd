@@ -39,9 +39,9 @@ emirror(
 
 \item{bottom}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
 
-\item{tline}{optional pvalue threshold to draw red line at in top plot}
+\item{tline}{list of pvalues to draw red threshold lines in top plot}
 
-\item{bline}{optional pvalue threshold to draw red line at in bottom plot}
+\item{bline}{list of pvalues to draw red threshold lines in bottom plot}
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 

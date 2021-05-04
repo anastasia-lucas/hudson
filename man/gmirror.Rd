@@ -36,9 +36,9 @@ gmirror(
 
 \item{bottom}{data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape}
 
-\item{tline}{optional pvalue threshold to draw red line at in top plot}
+\item{tline}{list of pvalues to draw red threshold lines in top plot}
 
-\item{bline}{optional pvalue threshold to draw red line at in bottom plot}
+\item{bline}{ist of pvalues to draw red threshold lines in bottom plot}
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 
