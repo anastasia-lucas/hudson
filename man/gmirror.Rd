@@ -9,6 +9,7 @@ gmirror(
   bottom,
   tline,
   bline,
+  chroms = c(1:22, "X", "Y"),
   log10 = TRUE,
   yaxis,
   opacity = 1,
@@ -39,6 +40,8 @@ gmirror(
 \item{tline}{list of pvalues to draw red threshold lines in top plot}
 
 \item{bline}{ist of pvalues to draw red threshold lines in bottom plot}
+
+\item{chroms}{list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")}
 
 \item{log10}{plot -log10() of pvalue column, boolean}
 

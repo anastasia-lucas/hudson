@@ -41,7 +41,12 @@
 #' highlight_p=c(0.0001, 0.0005), highlighter="green", toptitle = "EWAS Comparison Example: Data 1", 
 #' bottomtitle = "EWAS Comparison Example: Data 2")
 
-emirror <- function(top, bottom,  tline, bline, log10=TRUE, yaxis, opacity=1, toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p, highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, freey=FALSE, background="variegated", grpblocks=FALSE, file="emirror", hgtratio=0.5, hgt=7, wi=12, res=300){
+emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1, 
+                    toptitle=NULL, bottomtitle=NULL, annotate_var, annotate_p,
+                    highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", 
+                    color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, 
+                    freey=FALSE, background="variegated", grpblocks=FALSE, 
+                    file="emirror", hgtratio=0.5, hgt=7, wi=12, res=300){
 
   topn <- names(top)
   bottomn <- names(bottom)

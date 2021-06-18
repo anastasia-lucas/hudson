@@ -7,6 +7,7 @@
 #' @param bottom data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline ist of pvalues to draw red threshold lines in bottom plot
+#' @param chroms list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")
 #' @param log10 plot -log10() of pvalue column, boolean
 #' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0 to 1, useful for dense plots
@@ -38,8 +39,8 @@
 #' toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
 #' highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
 
-gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, 
-                    opacity=1, annotate_snp, annotate_p, toptitle=NULL, 
+gmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10=TRUE, 
+                    yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, 
                     bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", 
                     chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, 
                     background="variegated", chrblocks=FALSE, 
@@ -52,7 +53,8 @@ gmirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis,
   bottom$Location <- "Bottom"
   d <- rbind(top, bottom)
   d$POS <- as.numeric(as.character(d$POS))
-  d$CHR <- factor(d$CHR, levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y"))
+  d$CHR <- droplevels(factor(d$CHR, levels = as.character(chroms)))
+  d <- d[d$CHR %in% chroms, ]
   d_order <- d[order(d$CHR, d$POS), ]
   d_order$pos_index <- seq.int(nrow(d_order))
   d_order_sub <- d_order[, c("SNP", "CHR", "POS", "pvalue", "pos_index")]
