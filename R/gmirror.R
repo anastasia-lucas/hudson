@@ -2,9 +2,9 @@
 #'
 #' Create mirrored Manhattan plots for GWAS
 #' Dependencies: ggplot2, gridExtra
-#' Suggested: RColorBrewer, ggrepel
-#' @param top data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape
-#' @param bottom data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape
+#' Suggested: ggrepel
+#' @param top data frame, must contain SNP, CHR, POS, pvalue, optional Shape
+#' @param bottom data frame, must contain SNP, CHR, POS, pvalue, optional Shape
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline ist of pvalues to draw red threshold lines in bottom plot
 #' @param chroms list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")
@@ -24,6 +24,7 @@
 #' @param background variegated or white
 #' @param chrblocks boolean, turns on x-axis chromosome marker blocks
 #' @param file file name of saved image
+#' @param type plot type/extension
 #' @param hgt height of plot in inches
 #' @param hgtratio height ratio of plots, equal to top plot proportion
 #' @param wi width of plot in inches
@@ -43,8 +44,8 @@ gmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10=
                     yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, 
                     bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", 
                     chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, 
-                    background="variegated", chrblocks=FALSE, 
-                    file="gmirror", hgt=7, hgtratio=0.5, wi=12, res=300 ){
+                    background="variegated", chrblocks=FALSE, file="gmirror", 
+                    type="png", hgt=7, hgtratio=0.5, wi=12, res=300 ){
   
   #Sort data
   topn <- names(top)
@@ -217,8 +218,8 @@ gmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10=
   p1 <- p1 + guides(fill="none", color="none")
   p2 <- p2 + guides(fill="none", color="none")
   #Save
-  print(paste("Saving plot to ", file, ".png", sep=""))
+  print(paste0("Saving plot to ", file, ".", type))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio,1-hgtratio))
-  ggsave(p, filename=paste(file, ".png", sep=""), dpi=res, units="in", height=hgt, width=wi)
+  ggsave(p, filename=paste0(file, ".", type), dpi=res, units="in", height=hgt, width=wi)
   return(p)
 }

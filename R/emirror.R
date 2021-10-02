@@ -2,7 +2,7 @@
 #'
 #' Create mirrored Manhattan plots for EWAS
 #' Dependencies: ggplot2, gridExtra
-#' Suggested: RColorBrewer, ggrepel
+#' Suggested: ggrepel
 #' @param top data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional
 #' @param bottom data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional
 #' @param tline list of pvalues to draw red threshold lines in top plot
@@ -26,6 +26,7 @@
 #' @param background variegated or white
 #' @param grpblocks boolean, turns on x-axis group marker blocks
 #' @param file file name of saved image
+#' @param type plot type/extension
 #' @param hgtratio height ratio of plots, equal to top plot proportion
 #' @param hgt height of plot in inches
 #' @param wi width of plot in inches
@@ -46,13 +47,14 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
                     highlight_var, highlight_p, highlighter="red", color1="#AAAAAA", 
                     color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, 
                     freey=FALSE, background="variegated", grpblocks=FALSE, 
-                    file="emirror", hgtratio=0.5, hgt=7, wi=12, res=300){
+                    file="emirror", type="png", hgtratio=0.5, hgt=7, wi=12, res=300){
 
   topn <- names(top)
   bottomn <- names(bottom)
   top$Location <- "Top"
   bottom$Location <- "Bottom"
-  if(!identical(names(top), names(bottom))){stop("Please make sure both datasets have the same metadata columns.")}
+  #File format check
+  if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
   d <- rbind(top, bottom)
 
   #Info for y-axis
@@ -278,9 +280,9 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
   if(rotatelabels==TRUE){p1 <- p1 + theme(axis.text.x = element_text(angle=labelangle))}
 
   #Save
-  print(paste("Saving plot to ", file, ".png", sep=""))
+  print(paste0("Saving plot to ", file, ".", type))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio, 1-hgtratio))
-  ggsave(p, filename=paste(file, ".png", sep=""), dpi=res, units="in", height=hgt, width=wi)
+  ggsave(p, filename=paste0(file, ".", type), dpi=res, units="in", height=hgt, width=wi)
   return(p)
 
 }

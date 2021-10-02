@@ -28,6 +28,7 @@ emirror(
   background = "variegated",
   grpblocks = FALSE,
   file = "emirror",
+  type = "png",
   hgtratio = 0.5,
   hgt = 7,
   wi = 12,
@@ -81,6 +82,8 @@ emirror(
 
 \item{file}{file name of saved image}
 
+\item{type}{plot type/extension}
+
 \item{hgtratio}{height ratio of plots, equal to top plot proportion}
 
 \item{hgt}{height of plot in inches}
@@ -95,7 +98,7 @@ png image
 \description{
 Create mirrored Manhattan plots for EWAS
 Dependencies: ggplot2, gridExtra
-Suggested: RColorBrewer, ggrepel
+Suggested: ggrepel
 }
 \examples{
 data(ewas.t)

@@ -26,6 +26,7 @@ gmirror(
   background = "variegated",
   chrblocks = FALSE,
   file = "gmirror",
+  type = "png",
   hgt = 7,
   hgtratio = 0.5,
   wi = 12,
@@ -33,9 +34,9 @@ gmirror(
 )
 }
 \arguments{
-\item{top}{data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape}
+\item{top}{data frame, must contain SNP, CHR, POS, pvalue, optional Shape}
 
-\item{bottom}{data frame, if not plato or plink format, must contain SNP, CHR, POS, pvalue, optional Shape}
+\item{bottom}{data frame, must contain SNP, CHR, POS, pvalue, optional Shape}
 
 \item{tline}{list of pvalues to draw red threshold lines in top plot}
 
@@ -75,6 +76,8 @@ gmirror(
 
 \item{file}{file name of saved image}
 
+\item{type}{plot type/extension}
+
 \item{hgt}{height of plot in inches}
 
 \item{hgtratio}{height ratio of plots, equal to top plot proportion}
@@ -89,7 +92,7 @@ png image
 \description{
 Create mirrored Manhattan plots for GWAS
 Dependencies: ggplot2, gridExtra
-Suggested: RColorBrewer, ggrepel
+Suggested: ggrepel
 }
 \examples{
 data(gwas.t)

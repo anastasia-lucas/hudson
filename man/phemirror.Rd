@@ -28,6 +28,7 @@ phemirror(
   background = "variegated",
   chrblocks = TRUE,
   file = "phemirror",
+  type = "png",
   hgtratio = 0.5,
   hgt = 7,
   wi = 12,
@@ -35,11 +36,11 @@ phemirror(
 )
 }
 \arguments{
-\item{top}{data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
+\item{top}{data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
 
-\item{bottom}{data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
+\item{bottom}{data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
 
-\item{phegroup}{optional grouping file for phenotypes, must contain PHE and Group columns}
+\item{phegroup}{optional grouping dataframe for phenotypes, must contain PHE and Group columns}
 
 \item{tline}{list of pvalues to draw red threshold lines in top plot}
 
@@ -81,6 +82,8 @@ phemirror(
 
 \item{file}{file name of saved image}
 
+\item{type}{plot type/extension}
+
 \item{hgtratio}{height ratio of plots, equal to top plot proportion}
 
 \item{hgt}{height of plot in inches}
@@ -94,7 +97,7 @@ png image
 }
 \description{
 Create mirrored Manhattan plots for PheWAS
-Dependencies: ggplot2, gridExtra, RColorBrewer
+Dependencies: ggplot2, gridExtra
 Suggested: ggrepel
 }
 \examples{

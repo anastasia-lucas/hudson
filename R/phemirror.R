@@ -1,11 +1,11 @@
 #' phemirror
 #'
 #' Create mirrored Manhattan plots for PheWAS
-#' Dependencies: ggplot2, gridExtra, RColorBrewer
+#' Dependencies: ggplot2, gridExtra
 #' Suggested: ggrepel
-#' @param top data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape
-#' @param bottom data frame, if not plato or plink format, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape
-#' @param phegroup optional grouping file for phenotypes, must contain PHE and Group columns
+#' @param top data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape
+#' @param bottom data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape
+#' @param phegroup optional grouping dataframe for phenotypes, must contain PHE and Group columns
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline list of pvalues to draw red threshold lines in bottom plot
 #' @param chroms list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")
@@ -26,6 +26,7 @@
 #' @param background variegated or white
 #' @param chrblocks boolean, turns on x-axis chromosome marker blocks
 #' @param file file name of saved image
+#' @param type plot type/extension
 #' @param hgt height of plot in inches
 #' @param hgtratio height ratio of plots, equal to top plot proportion
 #' @param wi width of plot in inches
@@ -44,7 +45,7 @@ phemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X","
                       log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, 
                       highlight_p, highlighter="red", toptitle=NULL, bottomtitle=NULL, 
                       chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", groupcolors, freey=FALSE, 
-                      background="variegated", chrblocks=TRUE, file="phemirror", 
+                      background="variegated", chrblocks=TRUE, file="phemirror", type="png",
                       hgtratio=0.5, hgt=7, wi=12, res=300 ){
 
   #Sort data
@@ -52,8 +53,10 @@ phemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X","
   bottomn <- names(bottom)
   top$Location <- "Top"
   bottom$Location <- "Bottom"
-  if("Shape" %in% colnames(top) & !("Shape" %in% colnames(bottom))){bottom$Shape <- NA}
-  if("Shape" %in% colnames(bottom) & !("Shape" %in% colnames((top)))){top$Shape <- NA}
+  
+  #Check file formats
+  if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
+  
   d <- rbind(top, bottom)
   d$POS <- as.numeric(as.character(d$POS))
   d$CHR <- droplevels(factor(d$CHR, levels = as.character(chroms)))
@@ -280,9 +283,9 @@ phemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X","
   p2 <- p2 + guides(fill="none")
   
   #Save
-  print(paste("Saving plot to ", file, ".png", sep=""))
+  print(paste0("Saving plot to ", file, ".", type))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio, 1-hgtratio))
-  ggsave(p, filename=paste(file, ".png", sep=""), dpi=res, units="in", height=hgt, width=wi)
+  ggsave(p, filename=paste0(file, ".", type), dpi=res, units="in", height=hgt, width=wi)
 
   return(p)
 

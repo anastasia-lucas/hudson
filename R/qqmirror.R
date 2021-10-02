@@ -20,6 +20,7 @@
 #' @param bline draw a red line at (observed) pvalue threshold in bottom plot 
 #' @param background can change to "white"
 #' @param file filename
+#' @param type plot type/extension
 #' @param wi width of plot
 #' @param hgt height of plot
 #' @param hgtratio height ratio for plots
@@ -38,7 +39,7 @@
 qqmirror <- function(top, bottom, CI=0.95, opacity=1, groupcolors, splittop=NULL, splitbottom=NULL, 
                      highlight_p, highlight_name, annotate_p, annotate_name, highlighter="red", 
                      freey=FALSE, tline, bline, background, toptitle=NULL, bottomtitle=NULL, 
-                     file="qqmirror", wi=6, hgt=8, hgtratio=0.5, res=300){
+                     file="qqmirror", type="png", wi=6, hgt=8, hgtratio=0.5, res=300){
 
   arglist <- list(d=top, CI=CI, opacity=opacity, splitby=splittop, highlighter=highlighter)
   if(!missing(tline)){arglist <- c(arglist, line=tline)}
@@ -74,9 +75,9 @@ qqmirror <- function(top, bottom, CI=0.95, opacity=1, groupcolors, splittop=NULL
   #p1 <- p1 + theme_minimal() + theme(panel.background = element_rect(fill = NULL))
   #p2 <- p2 + theme_minimal() + theme(panel.background = element_rect(fill = NULL))
   #Save
-  print(paste("Saving plot to ", file, ".png", sep=""))
+  print(paste0("Saving plot to ", file, ".", type))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio,1-hgtratio))
-  ggsave(p, filename=paste(file, ".png", sep=""), dpi=res, units="in", height=hgt, width=wi)
+  ggsave(p, filename=paste0(file, ".", type), dpi=res, units="in", height=hgt, width=wi)
   return(p)
 
   
