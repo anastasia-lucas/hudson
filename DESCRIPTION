@@ -6,8 +6,8 @@ Author: person("Anastasia", "Lucas", email = "anastasia.lucas.bioinfo@gmail.com"
 Maintainer: The package maintainer <anastasia.lucas.bioinfo@gmail.com>
 Description: This package creates mirrored Manhattan (Hudson) plots for *ome-wide association analyses, including, but not limited to, GWAS, PheWAS, and EWAS. 
 License: GPL-3
-Suggests: ggrepel, RColorBrewer
-Depends: R (>= 3.2), ggplot2 (>= 3.3.0), gridExtra
+Suggests: ggrepel
+Depends: R (>= 3.2), ggplot2 (>= 3.3.0), gridExtra, grDevices, colorspace 
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

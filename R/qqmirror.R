@@ -35,7 +35,10 @@
 #' qqmirror(top=qqdat, bottom=qqdat, opacity=0.6, splittop="Color", splitbottom="Color", 
 #' toptitle="Example: Top", bottomtitle="Example: Bottom")
 
-qqmirror <- function(top, bottom, CI=0.95, opacity=1, groupcolors, splittop=NULL, splitbottom=NULL, highlight_p, highlight_name, annotate_p, annotate_name, highlighter="red", freey=FALSE, tline, bline, background, toptitle=NULL, bottomtitle=NULL, file="qqmirror", wi=6, hgt=8, hgtratio=0.5, res=300){
+qqmirror <- function(top, bottom, CI=0.95, opacity=1, groupcolors, splittop=NULL, splitbottom=NULL, 
+                     highlight_p, highlight_name, annotate_p, annotate_name, highlighter="red", 
+                     freey=FALSE, tline, bline, background, toptitle=NULL, bottomtitle=NULL, 
+                     file="qqmirror", wi=6, hgt=8, hgtratio=0.5, res=300){
 
   arglist <- list(d=top, CI=CI, opacity=opacity, splitby=splittop, highlighter=highlighter)
   if(!missing(tline)){arglist <- c(arglist, line=tline)}
@@ -67,6 +70,9 @@ qqmirror <- function(top, bottom, CI=0.95, opacity=1, groupcolors, splittop=NULL
     p2 <- p2 + scale_y_reverse()
     
   }
+  
+  #p1 <- p1 + theme_minimal() + theme(panel.background = element_rect(fill = NULL))
+  #p2 <- p2 + theme_minimal() + theme(panel.background = element_rect(fill = NULL))
   #Save
   print(paste("Saving plot to ", file, ".png", sep=""))
   p <- grid.arrange(arrangeGrob(p1, top=toptitle), arrangeGrob(p2, bottom=bottomtitle), padding=0, heights=c(hgtratio,1-hgtratio))

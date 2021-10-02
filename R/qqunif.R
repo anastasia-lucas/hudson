@@ -18,23 +18,19 @@
 #' @return ggplot object
 #' @import ggplot2
 
-qqunif <- function(d, CI=0.95, opacity=1, groupcolors, splitby=NULL, highlight_p, highlight_name, annotate_p, annotate_name, highlighter="red", line, slope=1, background, title){
+qqunif <- function(d, CI=0.95, opacity=1, groupcolors, splitby=NULL, highlight_p, highlight_name, 
+                   annotate_p, annotate_name, highlighter="red", line, slope=1, background, title){
   if("Color" %in% colnames(d)){
     if(!missing(groupcolors)){
       colrs <- groupcolors
     } else {
       ngroupcolors <- nlevels(factor(d$Color))
       if(ngroupcolors > 15){
-        if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
-          stop("Please install RColorBrewer to add color attributes for more than 15 colors.", call. = FALSE)
-        } else {
-          getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
-          colrs<- getPalette(ngroupcolors)
-        }
+        colrs <- Turbo(out.colors=ngroupcolors)
       } else {
-        pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24",
-                        "#ffff6d", "#000000", "#006ddb", "#004949","#924900",
-                        "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+        pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24",
+                 "#ffff6d", "#000000", "#006ddb", "#004949","#924900",
+                 "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
         colrs <- pal[1:ngroupcolors]
       }
     }
@@ -55,19 +51,19 @@ qqunif <- function(d, CI=0.95, opacity=1, groupcolors, splitby=NULL, highlight_p
                  cu=-log10(stats::qbeta(p = (1+CI)/2, shape1 = 1:length(!is.na(d$pvalue)), shape2 = length(!is.na(d$pvalue)):1)))
   }
   
-  if("Shape" %in% splitby & "Color" %in% splitby){
-    linaes1 <- "geom_line(aes(ex, cu, linetype=Shape, color=Color))"
-    linaes2 <- "geom_line(aes(ex, cl, linetype=Shape, color=Color))"
-  } else if("Shape" %in% splitby) {
-    linaes1 <- "geom_line(aes(ex, cu, linetype=Shape))"
-    linaes2 <- "geom_line(aes(ex, cl, linetype=Shape))"
-  } else if("Color" %in% splitby){
-    linaes1 <- "geom_line(aes(ex, cu, color=Color))"
-    linaes2 <- "geom_line(aes(ex, cl, color=Color))"
-  } else {
-    linaes1 <- "geom_line(aes(ex, cu), linetype=2)"
-    linaes2 <- "geom_line(aes(ex, cl), linetype=2)"
-  }
+  # if("Shape" %in% splitby & "Color" %in% splitby){
+  #   linaes1 <- "geom_line(aes(ex, cu, linetype=Shape, color=Color))"
+  #   linaes2 <- "geom_line(aes(ex, cl, linetype=Shape, color=Color))"
+  # } else if("Shape" %in% splitby) {
+  #   linaes1 <- "geom_line(aes(ex, cu, linetype=Shape))"
+  #   linaes2 <- "geom_line(aes(ex, cl, linetype=Shape))"
+  # } else if("Color" %in% splitby){
+  #   linaes1 <- "geom_line(aes(ex, cu, color=Color))"
+  #   linaes2 <- "geom_line(aes(ex, cl, color=Color))"
+  # } else {
+  #   linaes1 <- "geom_line(aes(ex, cu), linetype=2)"
+  #   linaes2 <- "geom_line(aes(ex, cl), linetype=2)"
+  # }
   #Plot
   if("Shape" %in% colnames(d)){
     if("Color" %in% colnames(d)){
@@ -84,7 +80,7 @@ qqunif <- function(d, CI=0.95, opacity=1, groupcolors, splitby=NULL, highlight_p
       p <- ggplot(dat, aes(ex, obs)) + geom_point(alpha=opacity)
     }
   }
-  p <- p + eval(parse(text=linaes1)) + eval(parse(text=linaes2))
+  #p <- p + eval(parse(text=linaes1)) + eval(parse(text=linaes2))
   p <- p + labs(x=expression(paste("Expected -log"[10], plain(P))), y=expression(paste("Observed -log"[10], plain(P))))
   p <- p + geom_abline(intercept = 0, slope = slope, alpha = 0.75)
   p <- p + theme(panel.grid.minor = element_blank())

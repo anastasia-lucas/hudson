@@ -52,6 +52,7 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
   bottomn <- names(bottom)
   top$Location <- "Top"
   bottom$Location <- "Bottom"
+  if(!identical(names(top), names(bottom))){stop("Please make sure both datasets have the same metadata columns.")}
   d <- rbind(top, bottom)
 
   #Info for y-axis
@@ -80,51 +81,28 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
   #Save to merge later
   d$rowid <- seq.int(nrow(d))
   dinfo <- d[, colnames(d) %in% c("rowid", "Color", "pval", "Location", "Shape"), drop=FALSE]
+  
+  #Create position index
+  subd <- d[, c("Variable", "Group", "pvalue", "rowid")]
+  d_order <- subd[order(subd$Group, subd$Variable),]
+  d_order$pos_index <- seq.int(nrow(d_order))
 
-  ##If no group, plot raw data
-  #if(!"Group" %in% colnames(d)){
-  #  print("Warning: Mirror plots contain a shared x-axis, please add grouping information if the axes are different")
-  #  d_order <- merge(d[, colnames(d) %in% c("Variable", "pvalue", "rowid")], dinfo, by="rowid")
-  #  if("Shape" %in% names(d)){
-  #    if("Color" %in% names(d)){
-  #       p1 <- ggplot() + geom_point(data=d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, shape=factor(Shape), color=Color), alpha=opacity)
-  #      p2 <- ggplot() + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, shape=factor(Shape), color=Color), alpha=opacity)
-  #    } else {
-  #      p1 <- ggplot() + geom_point(data=d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, shape=factor(Shape)), alpha=opacity)
-  #      p2 <- ggplot() + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, shape=factor(Shape)), alpha=opacity)
-  #    }
-  #    p1 <- p1 + theme(axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
-  #    p2 <- p2 + theme(axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
-  #  } else {
-  #    if("Color" %in% names(d)){
-  #      p1 <- ggplot(d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval, color=Color)) + geom_point()
-  #      p1 <- p1 + theme(axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
-  #      p2 <- ggplot(d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval, color=Color)) + geom_point()
-  #      p2 <- p2 + theme(axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
-  #    } else {
-  #      p1 <- ggplot(d_order[d_order$Location=="Top",], aes(x=factor(Variable), y=pval)) + geom_point() + theme(axis.title.x=element_blank())
-  #      p2 <- ggplot(d_order[d_order$Location=="Bottom",], aes(x=factor(Variable), y=pval)) + geom_point() + theme(axis.title.x=element_blank())
-  #    }
-  #  }
-  #} else {
-    #Create position index
-    subd <- d[, c("Variable", "Group", "pvalue", "rowid")]
-    d_order <- subd[order(subd$Group, subd$Variable),]
-    d_order$pos_index <- seq.int(nrow(d_order))
-
-    #Set up dataframe with position info
-    subd <- d_order[, colnames(d_order)!="rowid"]
-    maxRows <- by(subd, subd$Group, function(x) x[which.max(x$pos_index),])
-    minRows <- by(subd, subd$Group, function(x) x[which.min(x$pos_index),])
-    milimits <- do.call(rbind, minRows)
-    malimits <- do.call(rbind, maxRows)
-    lims <- merge(milimits, malimits, by="Group")
-    names(lims) <- c("Color", "Varx", "px", "posmin", "Vary", "py", "posmax")
-    lims$av <- (lims$posmin + lims$posmax)/2
-    lims$shademap <- rep(c("shade_ffffff","shade_ebebeb"), each=1, length.out=nrow(lims))
+  #Set up dataframe with position info
+  subd <- d_order[, colnames(d_order)!="rowid"]
+  maxRows <- by(subd, subd$Group, function(x) x[which.max(x$pos_index),])
+  minRows <- by(subd, subd$Group, function(x) x[which.min(x$pos_index),])
+  milimits <- do.call(rbind, minRows)
+  malimits <- do.call(rbind, maxRows)
+  lims <- merge(milimits, malimits, by="Group")
+  names(lims) <- c("Color", "Varx", "px", "posmin", "Vary", "py", "posmax")
+  lims$av <- (lims$posmin + lims$posmax)/2
+  lims$shademap <- rep(c("shade_ffffff","shade_ebebeb"), each=1, length.out=nrow(lims))
 
     #Set up colors
     nvarcolors <- nlevels(factor(lims$Color))
+    base_color <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), "#FFFFFF", "#EBEBEB")
+    names(base_color) <- c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
+    
     if("Color" %in% names(d)){
       #Color by Color column
       if(!missing(groupcolors)){
@@ -137,35 +115,29 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
         #Top Colors
         ngroupcolors <- nlevels(factor(d$Color[d$Location=="Top"]))
         if(ngroupcolors > 15){
-          if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
-            stop("Please install RColorBrewer to add color attribute for more than 15 colors.", call. = FALSE)
-          } else {
-            getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
-            topcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
-          }
+             topcols <- Turbo(out.colors=ngroupcolors)
         } else {
-          pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
-                          "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
-                          "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
-          topcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), pal[1:ngroupcolors], "#FFFFFF", "#EBEBEB")
+          pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+                   "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+                   "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+          topcols <- pal[1:ngroupcolors]
         }
-        names(topcols) <-c(levels(factor(lims$Color)), levels(factor(d$Color[d$Location=="Top"])), "shade_ffffff", "shade_ebebeb")
+        names(topcols) <- levels(factor(d$Color[d$Location=="Top"]))
         #Bottom Colors
         ngroupcolors <- nlevels(factor(d$Color[d$Location=="Bottom"]))
         if(ngroupcolors > 15){
           if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
             stop("Please install RColorBrewer to add color attribute for more than 15 colors.", call. = FALSE)
           } else {
-            getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
-            bottomcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
+            bottomcols <- Turbo(out.colors=ngroupcolors)
           }
         } else {
-          pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
-                          "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
-                          "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
-          bottomcols <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), pal[1:ngroupcolors], "#FFFFFF", "#EBEBEB")
+          pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+                   "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+                   "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+          bottomcols <- pal[1:ngroupcolors]
         }
-        names(bottomcols) <-c(levels(factor(lims$Color)), levels(factor(d$Color[d$Location=="Bottom"])), "shade_ffffff", "shade_ebebeb")
+        names(bottomcols) <- levels(factor(d$Color[d$Location=="Bottom"]))
       }
     } else {
       #Color by Group instead
@@ -213,15 +185,15 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
   #}
   if("Color" %in% names(d)){
     #Add legend
-    p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols)
+    p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(values = base_color)
     p1 <- p1 + guides(fill="none")
-    p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols)
+    p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(values = base_color)
     p2 <- p2 + guides(fill="none")
   } else {
     #Don't
-    p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols)
+    p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(values=base_color)
     p1 <- p1 + guides(color="none", fill="none")
-    p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols)
+    p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(values=base_color)
     p2 <- p2 + guides(color="none", fill="none")
   }
   

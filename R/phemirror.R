@@ -80,48 +80,42 @@ phemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X","
   lims$av <- (lims$posmin + lims$posmax)/2
   lims <- lims[order(lims$Color),]
   lims$shademap <- rep(c("shade_ffffff", "shade_ebebeb"), length.out=nrow(lims), each=1)
-
+  
   #Set up colors
+  #Chromsome & panel
   nchrcolors <- nlevels(factor(lims$Color))
+  base_color <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), "#FFFFFF", "#EBEBEB")
+  names(base_color) <- c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
+  
   if(!missing(groupcolors)){
-    dcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), "#FFFFFF", "#EBEBEB")
-    names(dcols) <-c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
-    topcols <- c(dcols, groupcolors)
-    bottomcols <- c(dcols, groupcolors)
+    #dcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), "#FFFFFF", "#EBEBEB")
+    #names(dcols) <-c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
+    topcols <- groupcolors
+    bottomcols <- groupcolors
   } else {
     #Top Colors
     ngroupcolors <- nlevels(factor(d_order$Color[d_order$Location=="Top"]))
     if(ngroupcolors>15){
-      if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
-        stop("Please install RColorBrewer to add color attributes for more than 15 colors.", call. = FALSE)
-      } else {
-        getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
-        topcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
-      }
+        topcols <- hudson:::Turbo(out.colors = ngroupcolors)
     } else {
-      pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
-                      "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
-                      "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
-      topcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), pal[1:ngroupcolors], "#FFFFFF", "#EBEBEB")
+      pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+                "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+                "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+      topcols <- pal[1:ngroupcolors]
     }
-    names(topcols) <-c(levels(factor(lims$Color)), levels(factor(d_order$Color[d_order$Location=="Top"])), "shade_ffffff", "shade_ebebeb")
+    names(topcols) <- levels(factor(d_order$Color[d_order$Location=="Top"]))
     #Bottom Colors
     ngroupcolors <- nlevels(factor(d_order$Color[d_order$Location=="Bottom"]))
     if(ngroupcolors>15){
-      if (!requireNamespace(c("RColorBrewer"), quietly = TRUE)==TRUE) {
-        stop("Please install RColorBrewer to add color attributes for more than 15 colors.", call. = FALSE)
-      } else {
-        getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
-        bottomcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), getPalette(ngroupcolors), "#FFFFFF", "#EBEBEB")
-      }
+        bottomcols <- hudson:::Turbo(ngroupcolors)
     } else {
-      pal <- pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
-                      "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
-                      "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
-      bottomcols <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), pal[1:ngroupcolors], "#FFFFFF", "#EBEBEB")
+      pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+                "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+                "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+      bottomcols <- pal[1:ngroupcolors]
     }
     
-    names(bottomcols) <-c(levels(factor(lims$Color)), levels(factor(d_order$Color[d_order$Location=="Bottom"])), "shade_ffffff", "shade_ebebeb")
+    names(bottomcols) <- levels(factor(d_order$Color[d_order$Location=="Bottom"]))
   }
 
   #Info for y-axis
@@ -153,33 +147,51 @@ phemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X","
   p1 <- ggplot() + eval(parse(text=backpanel1))
   #Add shape info if available
   if("Shape" %in% topn){
-    p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), alpha=opacity)
+    p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], 
+                          aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), 
+                          alpha=opacity)
   } else {
-    p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], aes(x=pos_index, y=pval, color=factor(Color)), alpha=opacity)
+    p1 <- p1 + geom_point(data=d_order[d_order$Location=="Top",], 
+                          aes(x=pos_index, y=pval, color=factor(Color)), 
+                          alpha=opacity)
   }
   p1 <- p1 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
   if(chrblocks==TRUE){
-    p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+    p1 <- p1 + geom_rect(data = lims, 
+                         aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), 
+                         alpha = 1)
   }
   #Add legend
-  p1 <- p1 + scale_colour_manual(name = "Color", values = topcols) + scale_fill_manual(name = "Color", values = topcols)
-  p1 <- p1 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
+  p1 <- p1 + 
+        scale_colour_manual(name = "Color", values = topcols) + 
+        scale_fill_manual(values = base_color)
+  p1 <- p1 + theme(panel.grid.minor.x = element_blank(),
+                   panel.grid.major.x=element_blank(), 
+                   axis.title.x=element_blank(), 
+                   legend.position="top", 
+                   legend.title=element_blank())
   
   #Start plotting
   #BOTTOM PLOT
   p2 <- ggplot() + eval(parse(text=backpanel2))
   #Add shape info if available
   if("Shape" %in% bottomn){
-    p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), alpha=opacity)
+    p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",],
+                          aes(x=pos_index, y=pval, color=factor(Color), shape=factor(Shape)), 
+                          alpha=opacity)
   } else {
-    p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], aes(x=pos_index, y=pval, color=factor(Color)), alpha=opacity)
+    p2 <- p2 + geom_point(data=d_order[d_order$Location=="Bottom",], 
+                          aes(x=pos_index, y=pval, color=factor(Color)), 
+                          alpha=opacity)
   }
   p2 <- p2 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
   if(chrblocks==TRUE){
-    p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+    p2 <- p2 + geom_rect(data = lims, 
+                         aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), 
+                         alpha = 1)
   } 
   #Add legend
-  p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(name = "Color", values = bottomcols)
+  p2 <- p2 + scale_colour_manual(name = "Color", values = bottomcols) + scale_fill_manual(values = base_color)
   p2 <- p2 + theme(axis.text.x=element_text(angle=90), panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
  
  #Highlight if given
@@ -251,7 +263,7 @@ phemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X","
     if(freey==TRUE){
       print("Sorry, drawing chrblocks with freey=TRUE is currently unsupported and will be ignored.")
     } else {
-      p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(yaxismin1,yaxismax1))
+      p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank()) + ylim(c(yaxismin1,yaxismax1))
       p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
     }
   } else {
