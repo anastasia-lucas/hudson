@@ -11,6 +11,7 @@ iphemirror(
   tline,
   bline,
   chroms = c(1:22, "X", "Y"),
+  levs,
   log10 = TRUE,
   yaxis,
   opacity = 1,
@@ -50,6 +51,8 @@ and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs9441
 \item{bline}{list of pvalues to draw red threshold lines in bottom plot}
 
 \item{chroms}{list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")}
+
+\item{levs}{vector containing the order phenotype values should appear in on the legend}
 
 \item{log10}{plot -log10() of pvalue column, logical}
 

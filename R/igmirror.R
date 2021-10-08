@@ -224,7 +224,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   if(chrblocks==TRUE){
     p <- p+ylim(c(yaxismin,yaxismax))
   } else {
-    p <- p+scale_y_continuous(limits=c(yaxismin, yaxismax), expand=expand_scale(mult=c(0,0.1)))
+    p <- p+scale_y_continuous(limits=c(yaxismin, yaxismax), expand=expansion(mult=c(0,0.1)))
     p <- p + geom_hline(yintercept = 0, color="black")
   }
   

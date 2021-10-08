@@ -14,6 +14,7 @@
 #' @param log10 plot -log10() of pvalue column, logical
 #' @param yaxis title for y-axis, automatically set if log10=TRUE
 #' @param xaxis title for x-axis
+#' @param levs if 'Color' column give, vector containing the order the values should appear in on the legend
 #' @param opacity opacity of points, from 0 to 1, useful for dense plots
 #' @param toptitle optional string for plot title
 #' @param bottomtitle optional string for plot title
@@ -44,7 +45,7 @@
 #' iemirror(top=ewas.t, bottom=ewas.b)
 
 
-iemirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis=NULL, xaxis=NULL,
+iemirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis=NULL, xaxis=NULL, levs,
                      opacity=1, highlight_var,  highlight_p, highlighter="red", 
                      title=NULL, color1="#AAAAAA", color2="#4D4D4D", blockmin=-1,
                      blockmax=1, groupcolors, rotatelabels=FALSE, labelangle, freey=FALSE, 
@@ -91,19 +92,35 @@ iemirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis=NULL, xaxis=NU
   lims <- merge(milimits, malimits, by="Group")
   names(lims) <- c("Color", "Varx", "px", "posmin", "Vary", "py", "posmax")
   lims$av <- (lims$posmin + lims$posmax)/2
-  lims$shademap <- rep(c("shade_ffffff","shade_ebebeb"), each=1, length.out=nrow(lims))
+  lims$shademap <- rep(c("shade_ffffff","shade_ebebeb"), 
+                       each=1,
+                       length.out=nrow(lims))
+  
+  # Final df
+  d_order <- merge(d_order, dinfo, by="rowid")
   
   #Set up colors
   nvarcolors <- nlevels(factor(lims$Color))
-  base_color <- c(rep(x=c(color1, color2), length.out=nvarcolors, each=1), "#FFFFFF", "#EBEBEB")
-  names(base_color) <- c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
+  base_color <- c(rep(x=c(color1, color2), 
+                      length.out=nvarcolors, 
+                      each=1), 
+                  "#FFFFFF", "#EBEBEB")
+  names(base_color) <- c(levels(factor(lims$Color)), 
+                         "shade_ffffff", "shade_ebebeb")
   
   if("Color" %in% names(d)){
-    #if(missing(levs)){
-    levs=as.character(levels(factor(d_order$Color)))
-    #}
+    if(missing(levs)){
+      levs=as.character(levels(factor(d_order$Color)))
+    }
     ngroupcolors <- nlevels(factor(d_order$Color, levels=levs))
-    newcols <- hudson:::Turbo(out.colors=ngroupcolors)
+    if(ngroupcolors > 15){
+      newcols <- hudson:::Turbo(out.colors=ngroupcolors)
+    } else {
+      pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+               "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+               "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+      newcols <- pal[1:ngroupcolors]
+    }
     names(newcols) <- levels(factor(d_order$Color, levels=levs))
   } else {
     #Color by Group instead
@@ -120,7 +137,6 @@ iemirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis=NULL, xaxis=NU
   }
   
   #Start plotting
-  d_order <- merge(d_order, dinfo, by="rowid")
   
   #Info for y-axis
   if(log10==TRUE){

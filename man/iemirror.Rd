@@ -12,6 +12,7 @@ iemirror(
   log10 = TRUE,
   yaxis = NULL,
   xaxis = NULL,
+  levs,
   opacity = 1,
   highlight_var,
   highlight_p,
@@ -53,6 +54,8 @@ and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
 \item{yaxis}{title for y-axis, automatically set if log10=TRUE}
 
 \item{xaxis}{title for x-axis}
+
+\item{levs}{if 'Color' column give, vector containing the order the values should appear in on the legend}
 
 \item{opacity}{opacity of points, from 0 to 1, useful for dense plots}
 

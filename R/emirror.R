@@ -49,6 +49,7 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
                     freey=FALSE, background="variegated", grpblocks=FALSE, 
                     file="emirror", type="png", hgtratio=0.5, hgt=7, wi=12, res=300){
   
+  # Combine data
   topn <- names(top)
   bottomn <- names(bottom)
   top$Location <- "Top"

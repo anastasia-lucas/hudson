@@ -13,6 +13,7 @@
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline list of pvalues to draw red threshold lines in bottom plot
 #' @param chroms list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")
+#' @param levs vector containing the order phenotype values should appear in on the legend
 #' @param log10 plot -log10() of pvalue column, logical
 #' @param yaxis title for y-axis, automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0-1, useful for dense plots
@@ -46,7 +47,7 @@
 #' iphemirror(phewas.t, phewas.b)
 
 iphemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X","Y"),
-                       log10=TRUE, yaxis, opacity=1, highlight_snp, 
+                       levs, log10=TRUE, yaxis, opacity=1, highlight_snp, 
                        highlight_p, highlighter="red", title=NULL, 
                        chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", chrblockmin=-1,
                        chrblockmax=1, groupcolors, freey=FALSE, ymax, ymin,
@@ -115,11 +116,18 @@ iphemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X",
   base_color <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), "#FFFFFF", "#EBEBEB")
   names(base_color) <- c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
   
-  #if(missing(levs)){
+  if(missing(levs)){
     levs=as.character(levels(factor(d_order$Color)))
-  #}
+  }
   ngroupcolors <- nlevels(factor(d_order$Color, levels=levs))
-  newcols <- hudson:::Turbo(out.colors=ngroupcolors)
+  if(ngroupcolors > 15){
+    newcols <- hudson:::Turbo(out.colors=ngroupcolors)
+  } else {
+    pal <- c("#009292", "#920000", "#490092", "#db6d00", "#24ff24", 
+             "#ffff6d", "#000000", "#006ddb", "#004949","#924900", 
+             "#ff6db6", "#6db6ff","#b66dff", "#ffb6db","#b6dbff")
+    newcols <- pal[1:ngroupcolors]
+  }
   names(newcols) <- levels(factor(d_order$Color, levels=levs))
   
   #Allow more than 6 shapes
