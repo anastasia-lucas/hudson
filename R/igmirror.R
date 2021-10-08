@@ -12,11 +12,9 @@
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline list of pvalues to draw red threshold lines in bottom plot
 #' @param chroms list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")
-#' @param log10 plot -log10() of pvalue column, boolean
-#' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
+#' @param log10 plot -log10() of pvalue column, logical
+#' @param yaxis title for y-axis, automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0-1, useful for dense plots
-#' @param annotate_snp vector of RSIDs to annotate
-#' @param annotate_p list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)
 #' @param title figure title
 #' @param chrcolor1 first alternating color for chromosome
 #' @param chrcolor2 second alternating color for chromosome
@@ -29,10 +27,9 @@
 #' @param ymax override the auto set y axis limit
 #' @param ymin override the auto set y axis limit
 #' @param background variegated or white
-#' @param chrblocks boolean, turns on x-axis chromosome marker blocks
+#' @param chrblocks logical, turns on x-axis chromosome marker blocks
 #' @param file file name of saved image
 #' @param hgt height of plot in inches
-#' @param hgtratio height ratio of plots, equal to top plot proportion
 #' @param wi width of plot in inches
 #' @param res resolution of plot in pixels per inch
 #' @return png image
@@ -47,12 +44,12 @@
 #' igmirror(gwas.t, gwas.b)
 
 igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
-                     log10=TRUE, yaxis, opacity=1, annotate_snp, annotate_p, highlight_snp, 
+                     log10=TRUE, yaxis, opacity=1, highlight_snp, 
                      highlight_p, highlighter="red", title=NULL, 
                      chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", chrblockmin=-1,
                      chrblockmax=1, freey=FALSE, ymax, ymin,
                      background="variegated", chrblocks=FALSE, file="igmirror", 
-                     hgtratio=0.5, hgt=7, wi=12, res=300 ){
+                     hgt=7, wi=12, res=300 ){
   
   #Sort data
   topn <- names(top)
@@ -67,8 +64,8 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   
   #Set onclick to NULL if needed
   if(!("Hover" %in% names(d))){
-    d$Hover <- paste("SNP:", d$SNP,
-                     "\nPosition:", paste(d$CHR, d$POS, sep=":"))
+    d$Hover <- paste0("SNP: ", d$SNP,
+                     "\nPosition: ", paste(d$CHR, d$POS, sep=":"))
   }
   if(!("Link" %in% names(d))){
     d$Link <- NULL
@@ -107,6 +104,13 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   colnames(d_order)[2] <- "Color"
   newcols <-rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1)
   names(newcols) <-levels(factor(lims$Color))
+  
+  #Allow more than 6 shapes
+  #3, 4 and 7 to 14 are composite symbols- incompatible with ggiraph
+  if("Shape" %in% names(d)){
+    allshapes <- c(16,15,17,18,0:2,5:6,19:25,33:127)
+    shapevector <- allshapes[1:nlevels(as.factor(d$Shape))]
+  }
   
   #Info for y-axis
   if(log10==TRUE){
@@ -178,22 +182,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
       p <- p + geom_point(data=d_order[d_order$pvalue < highlight_p, ], aes(x=pos_index, y=pval), colour=highlighter)
     }
   }
-  if(!missing(annotate_p)){
-    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
-      print("Consider installing 'ggrepel' for improved text annotation")
-      p <- p + geom_text(data=d_order[d_order$pvalue < annotate_p,], aes(pos_index,pval,label=SNP))
-    } else {
-      p <- p + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p,], aes(pos_index,pval,label=SNP))
-    }
-  }
-  if(!missing(annotate_snp)){
-    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE){
-      print("Consider installing 'ggrepel' for improved text annotation")
-      p <- p + geom_text(data=d_order[d_order$SNP %in% annotate_snp,], aes(pos_index,pval,label=SNP))
-    } else {
-      p <- p + ggrepel::geom_text_repel(data=d_order[d_order$SNP %in% annotate_snp,], aes(pos_index,pval,label=SNP))
-    }
-  }
+  
   #Add title and y axis title
   p <- p + ggtitle(title) + ylab(yaxislab) + xlab("Chromosome")
   #Add pvalue threshold line
@@ -212,6 +201,11 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   } else {
     yaxismin <- min(d_order$pval[d_order$pval!=-Inf])
   }
+  
+  if("Shape" %in% names(d_order)){
+    p <- p + scale_shape_manual(values=shapevector)
+  }
+  
   #Lims
   # if(equal_axis==TRUE){
   #   if(!missing(hard_limit)){
@@ -239,7 +233,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   #   vjustvar = c(1,1))
   
   #if(background=="white"){p <- p + theme(panel.background = element_rect(fill="white"))}
-  #p <- p + labs(caption = "Xpress-PheWAS") + 
+  #p <- p + labs(caption = "some text") + 
   #  theme(plot.caption = element_text(hjust=1),
   #        plot.caption.position="panel")
   p <- p + theme(panel.background = element_rect(fill="#F8F8F8"))
@@ -250,11 +244,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   #                    aes(x=xpos,y=ypos,hjust=hjustvar,vjust=vjustvar,label=annotateText))
   
   #Save
-  print(paste("Saving plot to ", file, ".html", sep=""))
-  #ggsave(p, filename=paste(file, ".png", sep=""), dpi=res, units="in", height=hgt, width=wi)
-  #print(p)
-  #girafe(code = print(my_gg))
-  #return_value <- "Finished"
+  print(paste0("Saving plot to ", file, ".html", sep=""))
   ip <- ggiraph::girafe(code = print(p))
   htmlwidgets::saveWidget(widget=ip, file=paste(file, ".html", sep=""))
   return("Finished")

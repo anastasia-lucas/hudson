@@ -10,11 +10,10 @@ iemirror(
   tline,
   bline,
   log10 = TRUE,
-  yaxis,
+  yaxis = NULL,
+  xaxis = NULL,
   opacity = 1,
-  annotate_snp,
-  annotate_p,
-  highlight_snp,
+  highlight_var,
   highlight_p,
   highlighter = "red",
   title = NULL,
@@ -31,14 +30,13 @@ iemirror(
   background = "variegated",
   grpblocks = FALSE,
   file = "iemirror",
-  hgtratio = 0.5,
   hgt = 7,
   wi = 12,
   res = 300
 )
 }
 \arguments{
-\item{top}{data frame, columns one and two must be Variable, pvalue, and Group; Shape, Color, Hover, Link optional
+\item{top}{data frame, columns one through three must be Variable, pvalue, and Group; Shape, Color, Hover, Link optional
 where 'Hover' contains tooltip information overriding the default (Variable, Group)
 and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
 
@@ -50,13 +48,15 @@ and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
 
 \item{bline}{list of pvalues to draw red threshold lines in bottom plot}
 
-\item{log10}{plot -log10() of pvalue column, boolean}
+\item{log10}{plot -log10() of pvalue column, logical}
 
-\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
+\item{yaxis}{title for y-axis, automatically set if log10=TRUE}
+
+\item{xaxis}{title for x-axis}
 
 \item{opacity}{opacity of points, from 0 to 1, useful for dense plots}
 
-\item{annotate_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
+\item{highlight_var}{vector of variables to highlight}
 
 \item{highlight_p}{list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)}
 
@@ -68,7 +68,7 @@ and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
 
 \item{groupcolors}{named vector of colors where names correspond to data in 'Color' column}
 
-\item{rotatelabels}{boolean, rotate axis labels?}
+\item{rotatelabels}{logical, rotate axis labels?}
 
 \item{labelangle}{angle to rotate}
 
@@ -76,11 +76,9 @@ and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
 
 \item{background}{variegated or white}
 
-\item{grpblocks}{boolean, turns on x-axis group marker blocks}
+\item{grpblocks}{logical, turns on x-axis group marker blocks}
 
 \item{file}{file name of saved image}
-
-\item{hgtratio}{height ratio of plots, equal to top plot proportion}
 
 \item{hgt}{height of plot in inches}
 
@@ -91,12 +89,6 @@ and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
 \item{toptitle}{optional string for plot title}
 
 \item{bottomtitle}{optional string for plot title}
-
-\item{annotate_var}{vector of variables to annotate}
-
-\item{highlight_var}{vector of variables to highlight}
-
-\item{type}{plot type/extension}
 }
 \value{
 png image
@@ -109,7 +101,7 @@ Suggested: ggrepel
 \examples{
 data(ewas.t)
 data(ewas.b)
-emirror(top=ewas.t, bottom=ewas.b, annotate_p = c(0.0001, 0.0005), 
-highlight_p=c(0.0001, 0.0005), highlighter="green", toptitle = "EWAS Comparison Example: Data 1", 
-bottomtitle = "EWAS Comparison Example: Data 2")
+ewas.t$Link <- paste0("https://www.google.com/search?q=", ewas.t$Variable)
+ewas.b$Link <- paste0("https://www.google.com/search?q=", ewas.b$Variable)
+iemirror(top=ewas.t, bottom=ewas.b)
 }

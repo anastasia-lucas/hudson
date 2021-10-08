@@ -9,7 +9,7 @@
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline list of pvalues to draw red threshold lines in bottom plot
 #' @param chroms list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")
-#' @param log10 plot -log10() of pvalue column, boolean
+#' @param log10 plot -log10() of pvalue column, logical
 #' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0-1, useful for dense plots
 #' @param annotate_snp vector of RSIDs to annotate
@@ -24,7 +24,7 @@
 #' @param groupcolors named vector of colors where names correspond to data in 'PHE' or 'Group' column
 #' @param freey allow y-axes to scale with the data
 #' @param background variegated or white
-#' @param chrblocks boolean, turns on x-axis chromosome marker blocks
+#' @param chrblocks logical, turns on x-axis chromosome marker blocks
 #' @param file file name of saved image
 #' @param type plot type/extension
 #' @param hgt height of plot in inches

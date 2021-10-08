@@ -44,7 +44,7 @@ emirror(
 
 \item{bline}{list of pvalues to draw red threshold lines in bottom plot}
 
-\item{log10}{plot -log10() of pvalue column, boolean}
+\item{log10}{plot -log10() of pvalue column, logical}
 
 \item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
 
@@ -70,7 +70,7 @@ emirror(
 
 \item{groupcolors}{named vector of colors where names correspond to data in 'Color' column}
 
-\item{rotatelabels}{boolean, rotate axis labels?}
+\item{rotatelabels}{logical, rotate axis labels?}
 
 \item{labelangle}{angle to rotate}
 
@@ -78,7 +78,7 @@ emirror(
 
 \item{background}{variegated or white}
 
-\item{grpblocks}{boolean, turns on x-axis group marker blocks}
+\item{grpblocks}{logical, turns on x-axis group marker blocks}
 
 \item{file}{file name of saved image}
 

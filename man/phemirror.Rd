@@ -48,7 +48,7 @@ phemirror(
 
 \item{chroms}{list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")}
 
-\item{log10}{plot -log10() of pvalue column, boolean}
+\item{log10}{plot -log10() of pvalue column, logical}
 
 \item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
 
@@ -78,7 +78,7 @@ phemirror(
 
 \item{background}{variegated or white}
 
-\item{chrblocks}{boolean, turns on x-axis chromosome marker blocks}
+\item{chrblocks}{logical, turns on x-axis chromosome marker blocks}
 
 \item{file}{file name of saved image}
 

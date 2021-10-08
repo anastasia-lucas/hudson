@@ -13,8 +13,6 @@ igmirror(
   log10 = TRUE,
   yaxis,
   opacity = 1,
-  annotate_snp,
-  annotate_p,
   highlight_snp,
   highlight_p,
   highlighter = "red",
@@ -29,7 +27,6 @@ igmirror(
   background = "variegated",
   chrblocks = FALSE,
   file = "igmirror",
-  hgtratio = 0.5,
   hgt = 7,
   wi = 12,
   res = 300
@@ -50,15 +47,11 @@ and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs9441
 
 \item{chroms}{list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")}
 
-\item{log10}{plot -log10() of pvalue column, boolean}
+\item{log10}{plot -log10() of pvalue column, logical}
 
-\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
+\item{yaxis}{title for y-axis, automatically set if log10=TRUE}
 
 \item{opacity}{opacity of points, from 0-1, useful for dense plots}
-
-\item{annotate_snp}{vector of RSIDs to annotate}
-
-\item{annotate_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
 
 \item{highlight_snp}{vector of snps to highlight}
 
@@ -84,11 +77,9 @@ and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs9441
 
 \item{background}{variegated or white}
 
-\item{chrblocks}{boolean, turns on x-axis chromosome marker blocks}
+\item{chrblocks}{logical, turns on x-axis chromosome marker blocks}
 
 \item{file}{file name of saved image}
-
-\item{hgtratio}{height ratio of plots, equal to top plot proportion}
 
 \item{hgt}{height of plot in inches}
 

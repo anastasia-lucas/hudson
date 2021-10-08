@@ -7,7 +7,7 @@
 #' @param bottom data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline list of pvalues to draw red threshold lines in bottom plot
-#' @param log10 plot -log10() of pvalue column, boolean
+#' @param log10 plot -log10() of pvalue column, logical
 #' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
 #' @param opacity opacity of points, from 0 to 1, useful for dense plots
 #' @param toptitle optional string for plot title
@@ -20,11 +20,11 @@
 #' @param highlight_p list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)
 #' @param highlighter color to highlight
 #' @param groupcolors named vector of colors where names correspond to data in 'Color' column
-#' @param rotatelabels boolean, rotate axis labels?
+#' @param rotatelabels logical, rotate axis labels?
 #' @param labelangle angle to rotate
 #' @param freey allow y-axes to scale with data
 #' @param background variegated or white
-#' @param grpblocks boolean, turns on x-axis group marker blocks
+#' @param grpblocks logical, turns on x-axis group marker blocks
 #' @param file file name of saved image
 #' @param type plot type/extension
 #' @param hgtratio height ratio of plots, equal to top plot proportion
