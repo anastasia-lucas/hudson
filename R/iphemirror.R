@@ -53,6 +53,7 @@ iphemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X",
                        background="variegated", chrblocks=TRUE, file="iphemirror", 
                        hgt=7, wi=12, res=300 ){
   
+
   #Sort data
   topn <- names(top)
   bottomn <- names(bottom)
@@ -135,6 +136,10 @@ iphemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X",
     if(!missing(tline)) {bredline <- log10(tline)}#log10(line[2])}
     if(!missing(bline)) {tredline <- log10(bline)}#-log10(line[1])}
   } else {
+    # Data check
+    if((min(top$pvalue, na.rm = TRUE) < max(bottom$pvalue, na.rm = TRUE)) | (max(bottom$pvalue, na.rm = TRUE) > min(top$pvalue, na.rm = TRUE))){
+      stop("Interactive figures do not currently support data that can not be split on the y-axis")
+    }
     d_order$pval <- d_order$pvalue
     yaxislab <- yaxis
     if(!missing(tline)) {bredline <- tline}#log10(line[2])}

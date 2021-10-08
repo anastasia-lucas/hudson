@@ -48,7 +48,7 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
                     color2="#4D4D4D", groupcolors, rotatelabels=FALSE, labelangle, 
                     freey=FALSE, background="variegated", grpblocks=FALSE, 
                     file="emirror", type="png", hgtratio=0.5, hgt=7, wi=12, res=300){
-
+  
   topn <- names(top)
   bottomn <- names(bottom)
   top$Location <- "Top"

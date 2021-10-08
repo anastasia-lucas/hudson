@@ -51,6 +51,7 @@ iemirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis=NULL, xaxis=NU
                      ymax, ymin, background="variegated", grpblocks=FALSE, file="iemirror", 
                      hgt=7, wi=12, res=300 ){
   
+  
   #Sort data
   topn <- names(top)
   bottomn <- names(bottom)
@@ -128,6 +129,10 @@ iemirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis=NULL, xaxis=NU
     if(!missing(tline)) {bredline <- log10(tline)}#log10(line[2])}
     if(!missing(bline)) {tredline <- log10(bline)}#-log10(line[1])}
   } else {
+    # Check that data can be reflected around an hline
+    if((min(top$pvalue, na.rm = TRUE) < max(bottom$pvalue, na.rm = TRUE)) | (max(bottom$pvalue, na.rm = TRUE) > min(top$pvalue, na.rm = TRUE))){
+      stop("Interactive figures do not currently support data that can not be split on the y-axis")
+    }
     d_order$pval <- d_order$pvalue
     yaxislab <- yaxis
     if(!missing(tline)) {bredline <- tline}#log10(line[2])}
