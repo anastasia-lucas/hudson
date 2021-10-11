@@ -36,25 +36,28 @@ emirror(
 )
 }
 \arguments{
-\item{top}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
+\item{top}{data frame, columns one and two must be 'Variable', 'pvalue', and 'Group';
+'Shape' and 'Color' optional}
 
-\item{bottom}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
+\item{bottom}{data frame, columns one and two must be 'Variable', 'pvalue', and 'Group'; 
+'Shape and 'Color' optional}
 
 \item{tline}{list of pvalues to draw red threshold lines in top plot}
 
 \item{bline}{list of pvalues to draw red threshold lines in bottom plot}
 
-\item{log10}{plot -log10() of pvalue column, logical}
+\item{log10}{plot -log10 of pvalue column, logical}
 
-\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
+\item{yaxis}{label for y-axis in the format c("top", "bottom"), 
+automatically set if log10=TRUE}
 
-\item{opacity}{opacity of points, from 0 to 1, useful for dense plots}
+\item{opacity}{opacity of points where 0 < opacity <= 1, useful for dense plots}
 
 \item{toptitle}{optional string for plot title}
 
 \item{bottomtitle}{optional string for plot title}
 
-\item{annotate_var}{vector of variables to annotate}
+\item{annotate_var}{vector of variable names to annotate}
 
 \item{annotate_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
 
@@ -62,7 +65,7 @@ emirror(
 
 \item{highlight_p}{list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)}
 
-\item{highlighter}{color to highlight}
+\item{highlighter}{color to use for highlight}
 
 \item{color1}{first alternating color}
 
@@ -82,9 +85,9 @@ emirror(
 
 \item{file}{file name of saved image}
 
-\item{type}{plot type/extension}
+\item{type}{plot type/extension, 'pdf' or 'png', etc.}
 
-\item{hgtratio}{height ratio of plots, equal to top plot proportion}
+\item{hgtratio}{height ratio for top plot; bottom will be auto assigned to 1-hgtratio}
 
 \item{hgt}{height of plot in inches}
 
@@ -104,6 +107,7 @@ Suggested: ggrepel
 data(ewas.t)
 data(ewas.b)
 emirror(top=ewas.t, bottom=ewas.b, annotate_p = c(0.0001, 0.0005), 
-highlight_p=c(0.0001, 0.0005), highlighter="green", toptitle = "EWAS Comparison Example: Data 1", 
-bottomtitle = "EWAS Comparison Example: Data 2")
+        highlight_p=c(0.0001, 0.0005), highlighter="green", 
+        toptitle = "EWAS Comparison Example: Data 1", 
+        bottomtitle = "EWAS Comparison Example: Data 2")
 }
