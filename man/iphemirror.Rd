@@ -11,38 +11,32 @@ iphemirror(
   tline,
   bline,
   chroms = c(1:22, "X", "Y"),
-  levs,
   log10 = TRUE,
   yaxis,
   opacity = 1,
+  annotate_snp,
+  annotate_p,
   highlight_snp,
   highlight_p,
   highlighter = "red",
-  title = NULL,
+  toptitle = NULL,
+  bottomtitle = NULL,
   chrcolor1 = "#AAAAAA",
   chrcolor2 = "#4D4D4D",
-  chrblockmin = -1,
-  chrblockmax = 1,
   groupcolors,
   freey = FALSE,
-  ymax,
-  ymin,
   background = "variegated",
   chrblocks = TRUE,
-  file = "iphemirror",
+  file = "phemirror",
+  hgtratio = 0.5,
   hgt = 7,
-  wi = 12,
-  res = 300
+  wi = 12
 )
 }
 \arguments{
-\item{top}{data frame, must contain PHE, SNP, CHR, POS, pvalue columns, optional Shape, Hover, Link
-where 'Hover' contains tooltip information overriding the default (SNP, chr:position, Phenotype)
-and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs944173"}
+\item{top}{data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
 
-\item{bottom}{data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape, Hover, Link
-where 'Hover' contains tooltip information overriding the default (SNP, chr:position, Phenotype)
-and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs944173"}
+\item{bottom}{data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
 
 \item{phegroup}{optional grouping dataframe for phenotypes, must contain PHE and Group columns}
 
@@ -52,13 +46,15 @@ and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs9441
 
 \item{chroms}{list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")}
 
-\item{levs}{vector containing the order phenotype values should appear in on the legend}
-
 \item{log10}{plot -log10() of pvalue column, logical}
 
-\item{yaxis}{title for y-axis, automatically set if log10=TRUE}
+\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
 
 \item{opacity}{opacity of points, from 0-1, useful for dense plots}
+
+\item{annotate_snp}{vector of RSIDs to annotate}
+
+\item{annotate_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
 
 \item{highlight_snp}{vector of snps to highlight}
 
@@ -66,23 +62,17 @@ and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs9441
 
 \item{highlighter}{color to highlight}
 
-\item{title}{figure title}
+\item{toptitle}{optional string for top plot title}
+
+\item{bottomtitle}{optional string for bottom plot title}
 
 \item{chrcolor1}{first alternating color for chromosome}
 
 \item{chrcolor2}{second alternating color for chromosome}
 
-\item{chrblockmin}{minimum y value for chromosome block}
-
-\item{chrblockmax}{maximum y value for chromosome block}
-
 \item{groupcolors}{named vector of colors where names correspond to data in 'PHE' or 'Group' column}
 
 \item{freey}{allow y-axes to scale with the data}
-
-\item{ymax}{override the auto set y axis limit}
-
-\item{ymin}{override the auto set y axis limit}
 
 \item{background}{variegated or white}
 
@@ -90,24 +80,27 @@ and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs9441
 
 \item{file}{file name of saved image}
 
+\item{hgtratio}{height ratio of plots, equal to top plot proportion}
+
 \item{hgt}{height of plot in inches}
 
 \item{wi}{width of plot in inches}
-
-\item{res}{resolution of plot in pixels per inch}
 }
 \value{
-png image
+html file
 }
 \description{
-Create interactive mirrored Manhattan plots for PheWAS
-Dependencies: ggplot2, ggiraph
+Create mirrored Manhattan plots for PheWAS
+Dependencies: ggplot2, gridExtra
 Suggested: ggrepel
 }
 \examples{
 data(phewas.t)
 data(phewas.b)
+phewas.t$Hover <- paste("p:", formatC(phewas.t$pvalue, format="e", digits=2))
+phewas.b$Hover <- paste("p:", formatC(phewas.b$pvalue, format="e", digits=2))
 phewas.t$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", phewas.t$SNP)
 phewas.b$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", phewas.b$SNP)
-iphemirror(phewas.t, phewas.b)
+iphemirror(top=phewas.t, bottom = phewas.b, 
+           toptitle = "PheWAS Example: Data 1", bottomtitle = "PheWAS Example: Data 2")
 }

@@ -10,40 +10,33 @@ iemirror(
   tline,
   bline,
   log10 = TRUE,
-  yaxis = NULL,
-  xaxis = NULL,
-  levs,
+  yaxis,
   opacity = 1,
+  toptitle = NULL,
+  bottomtitle = NULL,
+  annotate_var,
+  annotate_p,
   highlight_var,
   highlight_p,
   highlighter = "red",
-  title = NULL,
   color1 = "#AAAAAA",
   color2 = "#4D4D4D",
-  blockmin = -1,
-  blockmax = 1,
   groupcolors,
   rotatelabels = FALSE,
   labelangle,
   freey = FALSE,
-  ymax,
-  ymin,
   background = "variegated",
   grpblocks = FALSE,
-  file = "iemirror",
+  file = "emirror",
+  hgtratio = 0.5,
   hgt = 7,
-  wi = 12,
-  res = 300
+  wi = 12
 )
 }
 \arguments{
-\item{top}{data frame, columns one through three must be Variable, pvalue, and Group; Shape, Color, Hover, Link optional
-where 'Hover' contains tooltip information overriding the default (Variable, Group)
-and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
+\item{top}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
 
-\item{bottom}{data frame, columns one and two must be Variable, pvalue, and Group; Shape, Color, Hover, Link optional
-where 'Hover' contains tooltip information overriding the default (Variable, Group)
-and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
+\item{bottom}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
 
 \item{tline}{list of pvalues to draw red threshold lines in top plot}
 
@@ -51,13 +44,17 @@ and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
 
 \item{log10}{plot -log10() of pvalue column, logical}
 
-\item{yaxis}{title for y-axis, automatically set if log10=TRUE}
-
-\item{xaxis}{title for x-axis}
-
-\item{levs}{if 'Color' column give, vector containing the order the values should appear in on the legend}
+\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
 
 \item{opacity}{opacity of points, from 0 to 1, useful for dense plots}
+
+\item{toptitle}{optional string for plot title}
+
+\item{bottomtitle}{optional string for plot title}
+
+\item{annotate_var}{vector of variables to annotate}
+
+\item{annotate_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
 
 \item{highlight_var}{vector of variables to highlight}
 
@@ -83,22 +80,18 @@ and 'Link' contains a search query, ex. "https://en.wikipedia.org/wiki/"}
 
 \item{file}{file name of saved image}
 
+\item{hgtratio}{height ratio of plots, equal to top plot proportion}
+
 \item{hgt}{height of plot in inches}
 
 \item{wi}{width of plot in inches}
-
-\item{res}{resolution of plot in pixels per inch}
-
-\item{toptitle}{optional string for plot title}
-
-\item{bottomtitle}{optional string for plot title}
 }
 \value{
 png image
 }
 \description{
-Create interactive mirrored Manhattan plots for EWAS
-Dependencies: ggplot2, ggiraph
+Create mirrored Manhattan plots for EWAS
+Dependencies: ggplot2, gridExtra
 Suggested: ggrepel
 }
 \examples{
@@ -106,5 +99,8 @@ data(ewas.t)
 data(ewas.b)
 ewas.t$Link <- paste0("https://www.google.com/search?q=", ewas.t$Variable)
 ewas.b$Link <- paste0("https://www.google.com/search?q=", ewas.b$Variable)
-iemirror(top=ewas.t, bottom=ewas.b)
+iemirror(top=ewas.t, bottom=ewas.b, annotate_p = c(0.0001, 0.0005), 
+         highlight_p=c(0.0001, 0.0005), highlighter="green", 
+         toptitle = "EWAS Comparison Example: Data 1", 
+         bottomtitle = "EWAS Comparison Example: Data 2")
 }

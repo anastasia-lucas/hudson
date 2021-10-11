@@ -1,37 +1,32 @@
 #' igmirror
 #'
-#' Create interactive mirrored Manhattan plots for GWAS
-#' Dependencies: ggplot2, ggiraph
+#' Create mirrored Manhattan plots for GWAS
+#' Dependencies: ggplot2, gridExtra
 #' Suggested: ggrepel
-#' @param top data frame, must contain SNP, CHR, POS, pvalue columns, optional Shape, Hover, Link
-#'                        where 'Hover' contains tooltip information overriding the default (SNP, chr:position)
-#'                        and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs944173"
-#' @param bottom data frame, must contain SNP, CHR, POS, pvalue, columns, optional Shape, Hover, Link
-#'                           where 'Hover' contains tooltip information overriding the default (SNP, chr:position)
-#'                           and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs944173"
+#' @param top data frame, must contain SNP, CHR, POS, pvalue, optional Shape
+#' @param bottom data frame, must contain SNP, CHR, POS, pvalue, optional Shape
 #' @param tline list of pvalues to draw red threshold lines in top plot
-#' @param bline list of pvalues to draw red threshold lines in bottom plot
+#' @param bline ist of pvalues to draw red threshold lines in bottom plot
 #' @param chroms list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")
 #' @param log10 plot -log10() of pvalue column, logical
-#' @param yaxis title for y-axis, automatically set if log10=TRUE
-#' @param opacity opacity of points, from 0-1, useful for dense plots
-#' @param title figure title
+#' @param yaxis label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE
+#' @param opacity opacity of points, from 0 to 1, useful for dense plots
+#' @param annotate_snp vector of RSIDs to annotate
+#' @param annotate_p list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)
+#' @param toptitle optional string for top plot title
+#' @param bottomtitle optional string for bottom plot title
 #' @param chrcolor1 first alternating color for chromosome
 #' @param chrcolor2 second alternating color for chromosome
-#' @param chrblockmin minimum y value for chromosome block
-#' @param chrblockmax maximum y value for chromosome block
 #' @param highlight_snp vector of snps to highlight
-#' @param highlight_p list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)
+#' @param highlight_p list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)
 #' @param highlighter color to highlight
 #' @param freey allow y-axes to scale with the data
-#' @param ymax override the auto set y axis limit
-#' @param ymin override the auto set y axis limit
 #' @param background variegated or white
 #' @param chrblocks logical, turns on x-axis chromosome marker blocks
 #' @param file file name of saved image
 #' @param hgt height of plot in inches
+#' @param hgtratio height ratio of plots, equal to top plot proportion
 #' @param wi width of plot in inches
-#' @param res resolution of plot in pixels per inch
 #' @return png image
 #' @import ggplot2
 #' @importFrom gridExtra arrangeGrob grid.arrange
@@ -41,15 +36,16 @@
 #' data(gwas.b)
 #' gwas.t$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.t$SNP)
 #' gwas.b$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.b$SNP)
-#' igmirror(gwas.t, gwas.b)
+#' igmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
+#' toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
+#' highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
 
-igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
-                     log10=TRUE, yaxis, opacity=1, highlight_snp, 
-                     highlight_p, highlighter="red", title=NULL, 
-                     chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", chrblockmin=-1,
-                     chrblockmax=1, freey=FALSE, ymax, ymin,
-                     background="variegated", chrblocks=FALSE, file="igmirror", 
-                     hgt=7, wi=12, res=300 ){
+igmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10=TRUE, 
+                     yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, 
+                     bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", 
+                     chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, 
+                     background="variegated", chrblocks=FALSE, file="gmirror", 
+                     hgt=7, hgtratio=0.5, wi=12){
   
   #Sort data
   topn <- names(top)
@@ -57,7 +53,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   top$Location <- "Top"
   bottom$Location <- "Bottom"
   
-  #Check file formats
+  # Check file formats 
   if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
   
   d <- rbind(top, bottom)
@@ -65,15 +61,16 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   #Set onclick to NULL if needed
   if(!("Hover" %in% names(d))){
     d$Hover <- paste0("SNP: ", d$SNP,
-                     "\nPosition: ", paste(d$CHR, d$POS, sep=":"))
+                      "\nPosition: ", paste(d$CHR, d$POS, sep=":"),
+                      "\np-value: ", formatC(d$pvalue, format="e", digits=2))
   }
   if(!("Link" %in% names(d))){
-    d$Link <- NULL
+    d$Link <- NA
   } else {
     d$Link <- sprintf("window.open(\"%s\")", d$Link)
   }
   
-  #Sort data
+  d$POS <- as.numeric(as.character(d$POS))
   d$CHR <- droplevels(factor(d$CHR, levels = as.character(chroms)))
   d <- d[d$CHR %in% chroms, ]
   d_order <- d[order(d$CHR, d$POS), ]
@@ -93,17 +90,11 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   
   #Set up colors
   nchrcolors <- nlevels(factor(lims$Color))
-  base_color <- c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), "#FFFFFF", "#EBEBEB")
-  names(base_color) <- c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
-  
-  #if(missing(levs)){
-  #Set up colors
-  nchrcolors <- nlevels(factor(lims$Color))
   
   #Color by CHR
   colnames(d_order)[2] <- "Color"
-  newcols <-rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1)
-  names(newcols) <-levels(factor(lims$Color))
+  newcols <-c(rep(x=c(chrcolor1, chrcolor2), length.out=nchrcolors, each=1), "#FFFFFF", "#EBEBEB")
+  names(newcols) <-c(levels(factor(lims$Color)), "shade_ffffff", "shade_ebebeb")
   
   #Allow more than 6 shapes
   #3, 4 and 7 to 14 are composite symbols- incompatible with ggiraph
@@ -114,143 +105,212 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22,"X","Y"),
   
   #Info for y-axis
   if(log10==TRUE){
-    d_order$pval <- ifelse(d_order$Location=="Top", -log10(d_order$pvalue), log10(d_order$pvalue))
-    yaxislab <- expression(paste("+/-log"[10], "(p-value)", sep=""))
-    if(!missing(tline)) {bredline <- log10(tline)}#log10(line[2])}
-    if(!missing(bline)) {tredline <- log10(bline)}#-log10(line[1])}
+    d_order$pval <- -log10(d_order$pvalue)
+    yaxislab1 <- expression(paste("-log"[10], "(p-value)", sep=""))
+    yaxislab2 <- expression(paste("-log"[10], "(p-value)", sep=""))
+    if(!missing(tline)) {tredline <- -log10(tline)}
+    if(!missing(bline)) {bredline <- -log10(bline)}
   } else {
-    # Data check
-    if((min(top$pvalue, na.rm = TRUE) < max(bottom$pvalue, na.rm = TRUE)) | (max(bottom$pvalue, na.rm = TRUE) > min(top$pvalue, na.rm = TRUE))){
-      stop("Interactive figures do not currently support data that can not be split on the y-axis")
-    }
     d_order$pval <- d_order$pvalue
-    yaxislab <- yaxis
-    if(!missing(tline)) {bredline <- tline}#log10(line[2])}
-    if(!missing(bline)) {tredline <- bline}#-log10(line[1])}
+    yaxislab1 <- yaxis[1]
+    yaxislab2 <- yaxis[2]
+    if(!missing(tline)) {tredline <- tline}
+    if(!missing(bline)) {bredline <- bline}
   }
+  yaxismax1 <- ifelse(freey==FALSE, max(d_order$pval[which(d_order$pval< Inf)]), max(d_order$pval[which(d_order$pval< Inf) & d_order$Location=="Top"]))
+  yaxismax2 <- ifelse(freey==FALSE, max(d_order$pval[which(d_order$pval< Inf)]), max(d_order$pval[which(d_order$pval< Inf) & d_order$Location=="Bottom"]))
+  yaxismin1 <- ifelse(freey==FALSE, 0, min(d_order$pval[d_order$Location=="Top"]))
+  yaxismin2 <- ifelse(freey==FALSE, 0, min(d_order$pval[d_order$Location=="Bottom"]))
   
   #Theme options
-  backpanel <- ifelse(background=="white", "NULL", 
-                      "geom_rect(data = lims, aes(xmin = posmin, xmax = posmax, ymin = -Inf, ymax = Inf, fill=factor(shademap)), alpha = 0.3)" )
+  backpanel1 <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = yaxismin1, ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
+  backpanel2 <- ifelse(background=="white", "NULL", "geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = yaxismin2, ymax = Inf, fill=factor(shademap)), alpha = 0.5)" )
   
   #Start plotting
-  p <- ggplot() + eval(parse(text=backpanel))
+  #TOP PLOT
+  p1 <- ggplot() + eval(parse(text=backpanel1))
   #Add shape info if available
   if("Shape" %in% names(d)){
     
-    p <- p + geom_point(data=d_order[is.na(d_order$Hover),],
+    p1 <- p1 + geom_point(data=d_order[is.na(d_order$Hover) & d_order$Location=="Top",],
                         aes(x=pos_index, y=pval,
                             color=factor(Color), shape=factor(Shape)),
                         alpha=opacity) +
-      ggiraph::geom_point_interactive(data=d_order[!is.na(d_order$Hover),],
+      ggiraph::geom_point_interactive(data=d_order[!is.na(d_order$Hover) & d_order$Location=="Top",],
                                       aes(x=pos_index, y=pval, tooltip=Hover,
                                           color=factor(Color), shape=factor(Shape),
                                           onclick=Link),
                                       alpha=opacity) +
       scale_shape_manual(values=shapevector)
   } else {
-    p <- p + geom_point(data=d_order[is.na(d_order$Hover),],
+    p1 <- p1 + geom_point(data=d_order[is.na(d_order$Hover) & d_order$Location=="Top",],
                         aes(x=pos_index, y=pval,
                             color=factor(Color)),
                         alpha=opacity) +
-      ggiraph::geom_point_interactive(data=d_order[!is.na(d_order$Hover),],
+      ggiraph::geom_point_interactive(data=d_order[!is.na(d_order$Hover) & d_order$Location=="Top", ],
                                       aes(x=pos_index, y=pval,
                                           color=factor(Color), tooltip=Hover,
                                           onclick=Link),
                                       alpha=opacity)
   }
-  #ticklabs <- c(as.character(rep(1:15)), " ", "17", " ", "19", " ", "21", " ")
-  #p <- p + scale_x_continuous(breaks=lims$av, labels=ticklabs, expand=c(0,0))
-  p <- p + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
-  if(chrblocks==TRUE){p <- p + geom_rect(data = lims, aes(xmin = posmin, xmax = posmax, ymin = chrblockmin, ymax = chrblockmax, fill=as.factor(Color)), alpha = 1)}
-  #Add legend
-  p <- p + scale_colour_manual(name = "Color", values = newcols) + scale_fill_manual(values = base_color)
-  p <- p + theme(panel.grid.minor.y = element_blank(),
-                 panel.grid.major.y=element_blank(),
-                 legend.title=element_blank(),
-                 legend.position = "bottom")
+  
+  p1 <- p1 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
+  
+  if(chrblocks==TRUE){
+    p1 <- p1 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+  }
+  p1 <- p1 + scale_colour_manual(name = "Color", values = newcols) + scale_fill_manual(name = "Color", values = newcols)
+  p1 <- p1 + theme(panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="top", legend.title=element_blank())
+  
+  #BOTTOM PLOT
+  p2 <- ggplot() + eval(parse(text=backpanel2))
+  #Add shape info if available
+  if("Shape" %in% names(d)){
+    
+    p2 <- p2 + geom_point(data=d_order[is.na(d_order$Hover) & d_order$Location=="Bottom",],
+                        aes(x=pos_index, y=pval,
+                            color=factor(Color), shape=factor(Shape)),
+                        alpha=opacity) +
+      ggiraph::geom_point_interactive(data=d_order[!is.na(d_order$Hover) & d_order$Location=="Bottom",],
+                                      aes(x=pos_index, y=pval, tooltip=Hover,
+                                          color=factor(Color), shape=factor(Shape),
+                                          onclick=Link),
+                                      alpha=opacity) +
+      scale_shape_manual(values=shapevector)
+  } else {
+    p2 <- p2 + geom_point(data=d_order[is.na(d_order$Hover) & d_order$Location=="Bottom",],
+                        aes(x=pos_index, y=pval,
+                            color=factor(Color)),
+                        alpha=opacity) +
+      ggiraph::geom_point_interactive(data=d_order[!is.na(d_order$Hover) & d_order$Location=="Bottom" ,],
+                                      aes(x=pos_index, y=pval,
+                                          color=factor(Color), tooltip=Hover,
+                                          onclick=Link),
+                                      alpha=opacity)
+  }
+  
+  p2 <- p2 + scale_x_continuous(breaks=lims$av, labels=lims$Color, expand=c(0,0))
+  
+  if(chrblocks==TRUE){
+    p2 <- p2 + geom_rect(data = lims, aes(xmin = posmin-.5, xmax = posmax+.5, ymin = -Inf, ymax = min(d_order$pval), fill=as.factor(Color)), alpha = 1)
+  }  
+  p2 <- p2 + scale_colour_manual(name = "Color", values = newcols) + scale_fill_manual(name = "Color", values = newcols)
+  p2 <- p2 + theme(axis.text.x=element_text(angle=90), panel.grid.minor.x = element_blank(), panel.grid.major.x=element_blank(), axis.title.x=element_blank(), legend.position="bottom", legend.title=element_blank())
+  
   #Highlight if given
   if(!missing(highlight_snp)){
-    if("Shape" %in% names(d)){
-      p <- p + geom_point(data=d_order[d_order$SNP %in% highlight_snp, ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter) + scale_shape_manual(values=shapevector)
-      p <- p + guides(shape = guide_legend(override.aes = list(colour = "black")))
+    if("Shape" %in% topn){
+      p1 <- p1 + ggiraph::geom_point_interactive(data=d_order[d_order$SNP %in% highlight_snp & d_order$Location=="Top", ], 
+                                                 aes(x=pos_index, y=pval, shape=Shape, tooltip=Hover, onclick=Link), 
+                                                 colour=highlighter)
+      p1 <- p1 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
-      p <- p + geom_point(data=d_order[d_order$SNP %in% highlight_snp, ], aes(x=pos_index, y=pval), colour=highlighter)
+      p1 <- p1 + ggiraph::geom_point_interactive(data=d_order[d_order$SNP %in% highlight_snp & d_order$Location=="Top", ], 
+                                                 aes(x=pos_index, y=pval, tooltip=Hover, onclick=Link), 
+                                                 colour=highlighter)
+    }
+    if("Shape" %in% bottomn){
+      p2 <- p2 + ggiraph::geom_point_interactive(data=d_order[d_order$SNP %in% highlight_snp & d_order$Location=="Bottom", ], 
+                                                 aes(x=pos_index, y=pval, shape=Shape, tooltip=Hover, onclick=Link), 
+                                                 colour=highlighter)
+      p2 <- p2 + guides(shape = guide_legend(override.aes = list(colour = "black")))
+    } else {
+      p2 <- p2 + ggiraph::geom_point_interactive(data=d_order[d_order$SNP %in% highlight_snp & d_order$Location=="Bottom", ], 
+                                                 aes(x=pos_index, y=pval, tooltip=Hover, onclick=Link), 
+                                                 colour=highlighter)
     }
   }
   if(!missing(highlight_p)){
-    if("Shape" %in% names(d)){
-      p <- p + geom_point(data=d_order[d_order$pvalue < highlight_p, ], aes(x=pos_index, y=pval, shape=Shape), colour=highlighter) + scale_shape_manual(values=shapevector)
-      p <- p + guides(shape = guide_legend(override.aes = list(colour = "black")))
+    if("Shape" %in% topn){
+      p1 <- p1 + ggiraph::geom_point_interactive(data=d_order[d_order$pvalue < highlight_p[1] & d_order$Location=="Top", ],
+                                                 aes(x=pos_index, y=pval, shape=Shape, tooltip=Hover, onclick=Link), 
+                                                 colour=highlighter)
+      p1 <- p1 + guides(shape = guide_legend(override.aes = list(colour = "black")))
     } else {
-      p <- p + geom_point(data=d_order[d_order$pvalue < highlight_p, ], aes(x=pos_index, y=pval), colour=highlighter)
+      p1 <- p1 + ggiraph::geom_point_interactive(data=d_order[d_order$pvalue < highlight_p[1] & d_order$Location=="Top", ], 
+                                                 aes(x=pos_index, y=pval, tooltip=Hover, onclick=Link), 
+                                                 colour=highlighter)
+    }
+    if("Shape" %in% bottomn){
+      p2 <- p2 + ggiraph::geom_point_interactive(data=d_order[d_order$pvalue < highlight_p[2] & d_order$Location=="Bottom", ], 
+                                                 aes(x=pos_index, y=pval, shape=Shape, tooltip=Hover, onclick=Link), 
+                                                 colour=highlighter)
+      p2 <- p2 + guides(shape = guide_legend(override.aes = list(colour = "black")))
+    } else {
+      p2 <- p2 + ggiraph::geom_point_interactive(data=d_order[d_order$pvalue < highlight_p[2] & d_order$Location=="Bottom", ], 
+                                                 aes(x=pos_index, y=pval, tooltip=Hover, onclick=Link), 
+                                                 colour=highlighter)
     }
   }
-  
-  #Add title and y axis title
-  p <- p + ggtitle(title) + ylab(yaxislab) + xlab("Chromosome")
   #Add pvalue threshold line
-  if(!missing(tline)){p <- p + geom_hline(yintercept = tredline, colour="red")}
-  if(!missing(bline)){p <- p + geom_hline(yintercept = bredline, colour="red")}
-  
-  #Theme
-  if(!missing(ymax)){
-    yaxismax <- ymax
-  } else {
-    yaxismax <- max(d_order$pval[d_order$pvalue!=0 ])
+  if(!missing(tline)){
+    for(i in 1:length(tline)){
+      p1 <- p1 + geom_hline(yintercept = tredline[i], colour="red")
+    }
   }
-  
-  if(!missing(ymin)){
-    yaxismin <- ymin
-  } else {
-    yaxismin <- min(d_order$pval[d_order$pval!=-Inf])
+  if(!missing(bline)){
+    for(i in 1:length(bline)){
+      p2 <- p2 + geom_hline(yintercept = bredline[i], colour="red")
+    }
   }
-  
-  if("Shape" %in% names(d_order)){
-    p <- p + scale_shape_manual(values=shapevector)
+  #Annotate
+  if(!missing(annotate_p)){
+    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE) {
+      print("Consider installing 'ggrepel' for improved text annotation")
+      p1 <- p1 + geom_text(data=d_order[d_order$pvalue < annotate_p[1] & d_order$Location=="Top",], aes(pos_index,pval,label=SNP))
+      p2 <- p2 + geom_text(data=d_order[d_order$pvalue < annotate_p[2] & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+    } else {
+      p1 <- p1 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p[1] & d_order$Location=="Top",], aes(pos_index,pval,label=SNP))
+      p2 <- p2 + ggrepel::geom_text_repel(data=d_order[d_order$pvalue < annotate_p[2] & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+    }
   }
+  if(!missing(annotate_snp)){
+    if (!requireNamespace(c("ggrepel"), quietly = TRUE)==TRUE){
+      print("Consider installing 'ggrepel' for improved text annotation")
+      p1 <- p1 + geom_text(data=d_order[d_order$SNP %in% annotate_snp & d_order$Location=="Top",], aes(pos_index,pval,label=SNP))
+      p2 <- p2 + geom_text(data=d_order[d_order$SNP %in% annotate_snp & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+    } else {
+      p1 <- p1 + ggrepel::geom_text_repel(data=d_order[d_order$SNP %in% annotate_snp & d_order$Location=="Top",], aes(pos_index,pval,label=SNP))
+      p2 <- p2 + ggrepel::geom_text_repel(data=d_order[d_order$SNP %in% annotate_snp & d_order$Location=="Bottom",], aes(pos_index,pval,label=SNP))
+    }
+  }
+  #Add title and y axis title
+  p1 <- p1 + ylab(yaxislab1)
+  p2 <- p2 + ylab(yaxislab2)
   
-  #Lims
-  # if(equal_axis==TRUE){
-  #   if(!missing(hard_limit)){
-  #     true_lim <- hard_limit
-  #   } else {
-  #     true_lim <- max(abs(yaxismin), abs(yaxismax))
-  #   }
-  #   yaxismin <- -true_lim
-  #   yaxismax <- true_lim
-  # }
-  
+  #Format
   if(chrblocks==TRUE){
-    p <- p+ylim(c(yaxismin,yaxismax))
+    if(freey==TRUE){
+      print("Sorry, drawing chrblocks with freey=TRUE is currently unsupported and will be ignored.")
+    } else {
+      p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ylim(c(yaxismin1,yaxismax1))
+      p2 <- p2+scale_y_reverse(limits=c(yaxismax2, yaxismin2)) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
+    }
   } else {
-    p <- p+scale_y_continuous(limits=c(yaxismin, yaxismax), expand=expansion(mult=c(0,0.1)))
-    p <- p + geom_hline(yintercept = 0, color="black")
+    p1 <- p1+theme(axis.text.x = element_text(vjust=1),axis.ticks.x = element_blank())+ scale_y_continuous(limits=c(yaxismin1, yaxismax1),expand=expansion(mult=c(0,0.1)))
+    p2 <- p2+scale_y_reverse(limits=c(yaxismax2,yaxismin2), expand=expansion(mult=c(0.1,0))) + theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())
   }
   
-  
-  # annotations <- data.frame(
-  #   xpos = c(Inf,Inf),
-  #   ypos =  c(-Inf,Inf),
-  #   annotateText = c(toptitle, bottomtitle),
-  #   hjustvar = c(0,1),
-  #   vjustvar = c(1,1))
-  
-  #if(background=="white"){p <- p + theme(panel.background = element_rect(fill="white"))}
-  #p <- p + labs(caption = "some text") + 
-  #  theme(plot.caption = element_text(hjust=1),
-  #        plot.caption.position="panel")
-  p <- p + theme(panel.background = element_rect(fill="#F8F8F8"))
-  p <- p + guides(fill="none", color="none")
-  p <- p + ggtitle(title)
-  
-  # p <- p + geom_text(data=annotations,
-  #                    aes(x=xpos,y=ypos,hjust=hjustvar,vjust=vjustvar,label=annotateText))
-  
+  if(background=="white"){
+    p1 <- p1 + theme(panel.background = element_rect(fill="white"))
+    p2 <- p2 + theme(panel.background = element_rect(fill="white"))
+  }
+  p1 <- p1 + guides(fill="none", color="none")
+  p2 <- p2 + guides(fill="none", color="none")
+
   #Save
-  print(paste0("Saving plot to ", file, ".html", sep=""))
-  ip <- ggiraph::girafe(code = print(p))
-  htmlwidgets::saveWidget(widget=ip, file=paste(file, ".html", sep=""))
+  print(paste0("Saving plot to ", file, ".html"))
+  plot_row <- cowplot::plot_grid(p1, p2, ncol=1, rel_heights=c(hgtratio, 1-hgtratio))
+  rel <- 1
+  if(!is.null(toptitle)){  toptitle <- cowplot::ggdraw() + cowplot::draw_label(toptitle) ; rel <- c(0.05, rel) }
+  if(!is.null(bottomtitle)){ bottomtitle <- cowplot::ggdraw() + cowplot::draw_label(bottomtitle) ; rel <- c(rel, 0.05) }
+  plot_row <- list(toptitle, plot_row, bottomtitle)
+  
+  p <- ggiraph::girafe( ggobj = cowplot::plot_grid(plotlist = plot_row[!sapply(plot_row,is.null)],
+                                                   ncol = 1, 
+                                                   rel_heights = rel), 
+                        width_svg = wi, height_svg = hgt)
+  htmlwidgets::saveWidget(widget=p, file=paste0(file, ".html"))
   return("Finished")
   
 }

@@ -13,67 +13,60 @@ igmirror(
   log10 = TRUE,
   yaxis,
   opacity = 1,
+  annotate_snp,
+  annotate_p,
+  toptitle = NULL,
+  bottomtitle = NULL,
   highlight_snp,
   highlight_p,
   highlighter = "red",
-  title = NULL,
   chrcolor1 = "#AAAAAA",
   chrcolor2 = "#4D4D4D",
-  chrblockmin = -1,
-  chrblockmax = 1,
   freey = FALSE,
-  ymax,
-  ymin,
   background = "variegated",
   chrblocks = FALSE,
-  file = "igmirror",
+  file = "gmirror",
   hgt = 7,
-  wi = 12,
-  res = 300
+  hgtratio = 0.5,
+  wi = 12
 )
 }
 \arguments{
-\item{top}{data frame, must contain SNP, CHR, POS, pvalue columns, optional Shape, Hover, Link
-where 'Hover' contains tooltip information overriding the default (SNP, chr:position)
-and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs944173"}
+\item{top}{data frame, must contain SNP, CHR, POS, pvalue, optional Shape}
 
-\item{bottom}{data frame, must contain SNP, CHR, POS, pvalue, columns, optional Shape, Hover, Link
-where 'Hover' contains tooltip information overriding the default (SNP, chr:position)
-and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs944173"}
+\item{bottom}{data frame, must contain SNP, CHR, POS, pvalue, optional Shape}
 
 \item{tline}{list of pvalues to draw red threshold lines in top plot}
 
-\item{bline}{list of pvalues to draw red threshold lines in bottom plot}
+\item{bline}{ist of pvalues to draw red threshold lines in bottom plot}
 
 \item{chroms}{list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")}
 
 \item{log10}{plot -log10() of pvalue column, logical}
 
-\item{yaxis}{title for y-axis, automatically set if log10=TRUE}
+\item{yaxis}{label for y-axis in the format c("top", "bottom"), automatically set if log10=TRUE}
 
-\item{opacity}{opacity of points, from 0-1, useful for dense plots}
+\item{opacity}{opacity of points, from 0 to 1, useful for dense plots}
+
+\item{annotate_snp}{vector of RSIDs to annotate}
+
+\item{annotate_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
+
+\item{toptitle}{optional string for top plot title}
+
+\item{bottomtitle}{optional string for bottom plot title}
 
 \item{highlight_snp}{vector of snps to highlight}
 
-\item{highlight_p}{list of pvalue thresholds to annotate in the order of c(p_top, p_bottom)}
+\item{highlight_p}{list of pvalue thresholds to highlight in the order of c(p_top, p_bottom)}
 
 \item{highlighter}{color to highlight}
-
-\item{title}{figure title}
 
 \item{chrcolor1}{first alternating color for chromosome}
 
 \item{chrcolor2}{second alternating color for chromosome}
 
-\item{chrblockmin}{minimum y value for chromosome block}
-
-\item{chrblockmax}{maximum y value for chromosome block}
-
 \item{freey}{allow y-axes to scale with the data}
-
-\item{ymax}{override the auto set y axis limit}
-
-\item{ymin}{override the auto set y axis limit}
 
 \item{background}{variegated or white}
 
@@ -83,16 +76,16 @@ and 'Link' contains a search query, ex. "https://www.ncbi.nlm.nih.gov/snp/rs9441
 
 \item{hgt}{height of plot in inches}
 
-\item{wi}{width of plot in inches}
+\item{hgtratio}{height ratio of plots, equal to top plot proportion}
 
-\item{res}{resolution of plot in pixels per inch}
+\item{wi}{width of plot in inches}
 }
 \value{
 png image
 }
 \description{
-Create interactive mirrored Manhattan plots for GWAS
-Dependencies: ggplot2, ggiraph
+Create mirrored Manhattan plots for GWAS
+Dependencies: ggplot2, gridExtra
 Suggested: ggrepel
 }
 \examples{
@@ -100,5 +93,7 @@ data(gwas.t)
 data(gwas.b)
 gwas.t$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.t$SNP)
 gwas.b$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.b$SNP)
-igmirror(gwas.t, gwas.b)
+igmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
+toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
+highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
 }
