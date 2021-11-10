@@ -78,9 +78,12 @@ data(gwas.t)
 data(gwas.b)
 gwas.t$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.t$SNP) # links to dbSNP
 gwas.b$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.b$SNP) # links to dbSNP
-igmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
-toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
-highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
+igmirror(top=gwas.t, bottom=gwas.b, 
+         tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
+         toptitle="GWAS Comparison Example: Data 1",
+         bottomtitle = "GWAS Comparison Example: Data 2", 
+         highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), 
+         highlighter="green")
 
 # interactive PheWAS
 data(phewas.t)
