@@ -18,6 +18,11 @@ This package uses ggplot2 and gridExtra. ggrepel is suggested for improved text 
 
 ## Usage
 
+Code to create the figures in the hudson paper can be found at:
+https://github.com/RitchieLab/utility/blob/master/personal/ana/hudson-paper/hudson-paper-figures-code.R
+
+The below code creates proof of concept figures using small toy datasets provided by the package.
+
 ### Create a mirrored Manhattan plot using GWAS data
 ``` r
 # Create a basic plot with Bonferroni lines and highlighting using the toy gwas datasets
