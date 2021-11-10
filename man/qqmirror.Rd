@@ -24,6 +24,7 @@ qqmirror(
   toptitle = NULL,
   bottomtitle = NULL,
   file = "qqmirror",
+  type = "png",
   wi = 6,
   hgt = 8,
   hgtratio = 0.5,
@@ -68,6 +69,8 @@ qqmirror(
 \item{bottomtitle}{title for bottom plot}
 
 \item{file}{filename}
+
+\item{type}{plot type/extension}
 
 \item{wi}{width of plot}
 

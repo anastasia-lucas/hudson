@@ -12,7 +12,7 @@ As of now, there is only a development version of the package which can be insta
 
 ```devtools::install_github('anastasia-lucas/hudson')```
 
-This package uses ggplot2 and gridExtra. ggrepel is suggested for improved text annotation, but not required. The default color palette contains 15 colors; if additional colors are required, RColorBrewer can be used to create an expanded palette. 
+This package uses ggplot2 and gridExtra. ggrepel is suggested for improved text annotation, but not required. The default color palette contains 15 colors; if additional colors are required, colors will be interpolated from [Google AI's Turbo palette](https://ai.googleblog.com/2019/08/turbo-improved-rainbow-colormap-for.html). 
 
 ## Usage
 

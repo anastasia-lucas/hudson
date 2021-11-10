@@ -2,6 +2,9 @@
 
 export(emirror)
 export(gmirror)
+export(iemirror)
+export(igmirror)
+export(iphemirror)
 export(phemirror)
 export(qqmirror)
 import(ggplot2)
