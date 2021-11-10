@@ -61,7 +61,7 @@ Note that for EWAS plots in particular, although you can rotate the axis labels 
 
 ### Create interactive plots
 
-`Link` and/or `Hover` columns can be added to the dataframes to allow for clickable points and (beyond the defaul) tooltip text annotations respectively. Multiple lines for the tooltip annotations can be obtained by pasting a newline character, ex.
+`Link` and/or `Hover` columns can be added to the dataframes to allow for clickable points and (beyond the defaul) tooltip text annotations respectively. Multiple lines for the tooltip annotations can be obtained by pasting a newline character as shown below:
 
 ``` r
 df$Hover <- paste0("RSID: ", df$SNP, 
