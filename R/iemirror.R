@@ -3,8 +3,8 @@
 #' Create mirrored Manhattan plots for EWAS
 #' Dependencies: ggplot2, gridExtra
 #' Suggested: ggrepel
-#' @param top data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional
-#' @param bottom data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional
+#' @param top data frame, columns one and two must be Variable, pvalue, and Group; Shape, Color, Hover, Link optional
+#' @param bottom data frame, columns one and two must be Variable, pvalue, and Group; Shape, Color, Hover, Link optional
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline list of pvalues to draw red threshold lines in bottom plot
 #' @param log10 plot -log10() of pvalue column, logical
@@ -57,7 +57,7 @@ iemirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
   bottom$Location <- "Bottom"
   #File format check
   if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
-  d <- rbind(top, bottom)
+  d <- as.data.frame(rbind(top, bottom))
   
   #Set onclick to NULL if needed
   if(!("Hover" %in% names(d))){

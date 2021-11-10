@@ -3,8 +3,8 @@
 #' Create mirrored Manhattan plots for GWAS
 #' Dependencies: ggplot2, gridExtra
 #' Suggested: ggrepel
-#' @param top data frame, must contain SNP, CHR, POS, pvalue, optional Shape
-#' @param bottom data frame, must contain SNP, CHR, POS, pvalue, optional Shape
+#' @param top data frame, must contain: SNP, CHR, POS, pvalue, columns; optional: Shape, Hover, and Link
+#' @param bottom data frame, must contain: SNP, CHR, POS, pvalue, columns; optional: Shape, Hover, and Link
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline ist of pvalues to draw red threshold lines in bottom plot
 #' @param chroms list of chromosomes to plot in the order desired, default c(1:22, "X", "Y")
@@ -56,7 +56,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10
   # Check file formats 
   if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
   
-  d <- rbind(top, bottom)
+  d <- as.data.frame(rbind(top, bottom))
   
   #Set onclick to NULL if needed
   if(!("Hover" %in% names(d))){

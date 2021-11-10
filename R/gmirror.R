@@ -56,7 +56,7 @@ gmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10=
   # Check file formats
   if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
   
-  d <- rbind(top, bottom)
+  d <- as.data.frame(rbind(top, bottom))
   
   d$POS <- as.numeric(as.character(d$POS))
   d$CHR <- droplevels(factor(d$CHR, levels = as.character(chroms)))

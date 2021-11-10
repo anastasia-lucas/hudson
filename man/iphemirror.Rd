@@ -34,9 +34,9 @@ iphemirror(
 )
 }
 \arguments{
-\item{top}{data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
+\item{top}{data frame, must contain: PHE, SNP, CHR, POS, pvalue, columns; optional: Shape, Hover, and Link}
 
-\item{bottom}{data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape}
+\item{bottom}{data frame, must contain: PHE, SNP, CHR, POS, pvalue, columns; optional: Shape, Hover, and Link}
 
 \item{phegroup}{optional grouping dataframe for phenotypes, must contain PHE and Group columns}
 

@@ -32,9 +32,9 @@ igmirror(
 )
 }
 \arguments{
-\item{top}{data frame, must contain SNP, CHR, POS, pvalue, optional Shape}
+\item{top}{data frame, must contain: SNP, CHR, POS, pvalue, columns; optional: Shape, Hover, and Link}
 
-\item{bottom}{data frame, must contain SNP, CHR, POS, pvalue, optional Shape}
+\item{bottom}{data frame, must contain: SNP, CHR, POS, pvalue, columns; optional: Shape, Hover, and Link}
 
 \item{tline}{list of pvalues to draw red threshold lines in top plot}
 

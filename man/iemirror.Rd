@@ -34,9 +34,9 @@ iemirror(
 )
 }
 \arguments{
-\item{top}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
+\item{top}{data frame, columns one and two must be Variable, pvalue, and Group; Shape, Color, Hover, Link optional}
 
-\item{bottom}{data frame, columns one and two must be Variable, pvalue, and Group; Shape and Color optional}
+\item{bottom}{data frame, columns one and two must be Variable, pvalue, and Group; Shape, Color, Hover, Link optional}
 
 \item{tline}{list of pvalues to draw red threshold lines in top plot}
 

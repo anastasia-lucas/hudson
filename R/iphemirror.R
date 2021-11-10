@@ -3,8 +3,8 @@
 #' Create mirrored Manhattan plots for PheWAS
 #' Dependencies: ggplot2, gridExtra
 #' Suggested: ggrepel
-#' @param top data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape
-#' @param bottom data frame, must contain PHE, SNP, CHR, POS, pvalue, columns, optional Shape
+#' @param top data frame, must contain: PHE, SNP, CHR, POS, pvalue, columns; optional: Shape, Hover, and Link
+#' @param bottom data frame, must contain: PHE, SNP, CHR, POS, pvalue, columns; optional: Shape, Hover, and Link
 #' @param phegroup optional grouping dataframe for phenotypes, must contain PHE and Group columns
 #' @param tline list of pvalues to draw red threshold lines in top plot
 #' @param bline list of pvalues to draw red threshold lines in bottom plot
@@ -59,7 +59,7 @@ iphemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X",
   #Check file formats
   if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
   
-  d <- rbind(top, bottom)
+  d <- as.data.frame(rbind(top, bottom))
   
   #Set onclick to NULL if needed
   if(!("Hover" %in% names(d))){

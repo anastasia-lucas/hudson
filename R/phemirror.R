@@ -57,7 +57,7 @@ phemirror <- function(top, bottom, phegroup, tline, bline, chroms = c(1:22,"X","
   #Check file formats
   if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
   
-  d <- rbind(top, bottom)
+  d <- as.data.frame(rbind(top, bottom))
   d$POS <- as.numeric(as.character(d$POS))
   d$CHR <- droplevels(factor(d$CHR, levels = as.character(chroms)))
   d <- d[d$CHR %in% chroms, ]

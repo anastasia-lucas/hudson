@@ -61,7 +61,7 @@ emirror <- function(top, bottom, tline, bline, log10=TRUE, yaxis, opacity=1,
   
   ### File format check ###
   if(!identical(topn, bottomn)){stop("Please ensure both inputs have the same metadata columns.")}
-  d <- rbind(top, bottom)
+  d <- as.data.frame(rbind(top, bottom))
 
   ####### Info for y-axis ######
   if(log10==TRUE){
