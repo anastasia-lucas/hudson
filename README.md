@@ -21,7 +21,7 @@ This package uses ggplot2 and gridExtra. ggrepel is suggested for improved text 
 Code to create the figures in the hudson paper can be found at:
 https://github.com/RitchieLab/utility/blob/master/personal/ana/hudson-paper/hudson-paper-figures-code.R
 
-The below code creates proof of concept figures using small toy datasets provided by the package.
+The below code creates proof of concept figures using small toy datasets provided by the package. Please note that the data should match the column ordering specified in the document, i.e. column order matters.
 
 ### Create a mirrored Manhattan plot using GWAS data
 ``` r
