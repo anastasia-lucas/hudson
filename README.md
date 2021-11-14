@@ -73,7 +73,7 @@ df$Hover <- paste0("RSID: ", df$SNP,
                    "\np-value: ", df$pvalue)
 ```
 
-The below commands will create HTML files that can be opened in any internet browser. It is suggested that users prefilter data based on some threshold to include only SNPs of interest as performance can be low when attempting to plot a large number of points. 
+The below commands will create HTML files that can be opened in any internet browser. It is suggested that users prefilter data based on some threshold to include only SNPs of interest as performance can be low when attempting to plot a large number of points. I personally recommend staying below 50K points as the interactive figures are meant to faciliate data exploration for variants of interest rather than viewing the entire landscape. 
 
 ``` r
 library(hudson)
