@@ -23,6 +23,7 @@
 #' @param freey allow y-axes to scale with the data
 #' @param background variegated or white
 #' @param chrblocks logical, turns on x-axis chromosome marker blocks
+#' @param hover_threshold numeric p-value threshold for hovering, other points will be rasterized; only used when no `Hover` column in data
 #' @param file file name of saved image
 #' @param hgt height of plot in inches
 #' @param hgtratio height ratio of plots, equal to top plot proportion
@@ -36,15 +37,16 @@
 #' data(gwas.b)
 #' gwas.t$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.t$SNP)
 #' gwas.b$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.b$SNP)
-#' igmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
-#' toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
-#' highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
+# igmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b),
+# toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2",
+# highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
 
 igmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10=TRUE, 
                      yaxis, opacity=1, annotate_snp, annotate_p, toptitle=NULL, 
                      bottomtitle=NULL, highlight_snp, highlight_p, highlighter="red", 
                      chrcolor1="#AAAAAA", chrcolor2="#4D4D4D", freey=FALSE, 
                      background="variegated", chrblocks=FALSE, file="gmirror", 
+                     hover_threshold = 5e-8,
                      hgt=7, hgtratio=0.5, wi=12){
   
   #Sort data
@@ -59,16 +61,20 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10
   d <- as.data.frame(rbind(top, bottom))
   
   #Set onclick to NULL if needed
-  if(!("Hover" %in% names(d))){
-    d$Hover <- paste0("SNP: ", d$SNP,
-                      "\nPosition: ", paste(d$CHR, d$POS, sep=":"),
-                      "\np-value: ", formatC(d$pvalue, format="e", digits=2))
-  }
   if(!("Link" %in% names(d))){
     d$Link <- NA
   } else {
-    d$Link <- sprintf("window.open(\"%s\")", d$Link)
+    d$Link <- ifelse(!is.na(d$Link), sprintf("window.open(\"%s\")", d$Link), NA)
   }
+  
+  if(!("Hover" %in% names(d))){
+    d$Hover <- ifelse(d$pvalue < hover_threshold | !is.na(d$Link),
+                      paste0("SNP: ", d$SNP,
+                      "\nPosition: ", paste(d$CHR, d$POS, sep=":"),
+                      "\np-value: ", formatC(d$pvalue, format="e", digits=2)),
+                      NA)
+  }
+
   
   d$POS <- as.numeric(as.character(d$POS))
   d$CHR <- droplevels(factor(d$CHR, levels = as.character(chroms)))
@@ -132,7 +138,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10
   #Add shape info if available
   if("Shape" %in% names(d)){
     
-    p1 <- p1 + geom_point(data=d_order[is.na(d_order$Hover) & d_order$Location=="Top",],
+    p1 <- p1 + ggrastr::geom_point_rast(data=d_order[is.na(d_order$Hover) & d_order$Location=="Top",],
                         aes(x=pos_index, y=pval,
                             color=factor(Color), shape=factor(Shape)),
                         alpha=opacity) +
@@ -143,7 +149,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10
                                       alpha=opacity) +
       scale_shape_manual(values=shapevector)
   } else {
-    p1 <- p1 + geom_point(data=d_order[is.na(d_order$Hover) & d_order$Location=="Top",],
+    p1 <- p1 + ggrastr::geom_point_rast(data=d_order[is.na(d_order$Hover) & d_order$Location=="Top",],
                         aes(x=pos_index, y=pval,
                             color=factor(Color)),
                         alpha=opacity) +
@@ -167,7 +173,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10
   #Add shape info if available
   if("Shape" %in% names(d)){
     
-    p2 <- p2 + geom_point(data=d_order[is.na(d_order$Hover) & d_order$Location=="Bottom",],
+    p2 <- p2 + ggrastr::geom_point_rast(data=d_order[is.na(d_order$Hover) & d_order$Location=="Bottom",],
                         aes(x=pos_index, y=pval,
                             color=factor(Color), shape=factor(Shape)),
                         alpha=opacity) +
@@ -178,7 +184,7 @@ igmirror <- function(top, bottom, tline, bline, chroms = c(1:22, "X", "Y"),log10
                                       alpha=opacity) +
       scale_shape_manual(values=shapevector)
   } else {
-    p2 <- p2 + geom_point(data=d_order[is.na(d_order$Hover) & d_order$Location=="Bottom",],
+    p2 <- p2 + ggrastr::geom_point_rast(data=d_order[is.na(d_order$Hover) & d_order$Location=="Bottom",],
                         aes(x=pos_index, y=pval,
                             color=factor(Color)),
                         alpha=opacity) +

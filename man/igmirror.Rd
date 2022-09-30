@@ -26,6 +26,7 @@ igmirror(
   background = "variegated",
   chrblocks = FALSE,
   file = "gmirror",
+  hover_threshold = 5e-08,
   hgt = 7,
   hgtratio = 0.5,
   wi = 12
@@ -74,6 +75,8 @@ igmirror(
 
 \item{file}{file name of saved image}
 
+\item{hover_threshold}{numeric p-value threshold for hovering, other points will be rasterized; only used when no `Hover` column in data}
+
 \item{hgt}{height of plot in inches}
 
 \item{hgtratio}{height ratio of plots, equal to top plot proportion}
@@ -93,7 +96,4 @@ data(gwas.t)
 data(gwas.b)
 gwas.t$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.t$SNP)
 gwas.b$Link <- paste0("https://www.ncbi.nlm.nih.gov/snp/", gwas.b$SNP)
-igmirror(top=gwas.t, bottom=gwas.b, tline=0.05/nrow(gwas.t), bline=0.05/nrow(gwas.b), 
-toptitle="GWAS Comparison Example: Data 1", bottomtitle = "GWAS Comparison Example: Data 2", 
-highlight_p = c(0.05/nrow(gwas.t), 0.05/nrow(gwas.b)), highlighter="green")
 }
